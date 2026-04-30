@@ -328,6 +328,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <script>
+function trackConversion(type) {
+    if (!sessionStorage.getItem('conversion_sent')) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            'event': 'SubmitForm',
+            'conversion_type': type
+        });
+        
+        sessionStorage.setItem('conversion_sent', 'true');
+    }
+}
         const quizData = [
             { 
                 icon: "✍️", video: "1. VIDEO_INK.mp4", 
@@ -475,17 +486,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function checkAnswer(choice) {
             const data = quizData[currentIdx];
-            if (currentIdx === 4) {
-        // sessionStorage를 확인하여 해당 세션에서 이미 보냈는지 체크
-        if (!sessionStorage.getItem('tt_conversion_submitted')) {
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({
-                'event': 'SubmitForm' // 요청하신 이벤트 코드
-            });
-            // 중복 방지를 위해 세션 스토리지에 기록 저장
-            sessionStorage.setItem('tt_conversion_submitted', 'true');
-        }
-    }
             const isCorrect = choice === data.answer;
             const desc = document.getElementById('feedback-desc');
             
@@ -525,6 +525,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         function toNext() {
             if (lives <= 0) {
                 showScreen('game-over-screen');
+                trackConversion('gameover');
                 return;
             }
             
@@ -539,6 +540,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function showFinalResult() {
             showScreen('result-screen');
+            trackConversion('result');
             const resultDesc = document.getElementById('result-desc');
             const resultBadge = document.getElementById('result-badge');
             
