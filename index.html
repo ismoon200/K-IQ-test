@@ -170,29 +170,57 @@
     pointer-events: none;
   }
 
-  /* GAMEBOY DEVICE */
+  /* GAMEBOY DEVICE — v13: 그레인 회색 바디 */
   .gameboy-device {
     width: 420px;
     max-width: 95vw;
-    background: #c8c8c8;
-    border-radius: 16px 16px 40px 40px;
-    border: 4px solid #888;
-    box-shadow: 8px 8px 0 #555, inset 0 2px 0 rgba(255,255,255,0.6);
+    aspect-ratio: 3 / 5;
+    background-color: #c0bfbc;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.35'/%3E%3C/svg%3E");
+    border-radius: 0;
+    border: 4px solid #aaa;
+    box-shadow: 0 0 0 1px var(--dark), 6px 6px 0 var(--dark);
     position: relative;
     flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 샤인 스윕 */
+  .gameboy-device::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(105deg, transparent 20%, rgba(192,255,255,0.35) 50%, transparent 80%);
+    animation: gbShine 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  @keyframes gbShine {
+    0%   { left: -100%; opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { left: 130%; opacity: 1; }
+    51%  { opacity: 0; }
+    100% { left: 130%; opacity: 0; }
   }
 
   .gb-top {
     padding: 20px 20px 12px;
-    background: #d0d0d0;
-    border-radius: 12px 12px 0 0;
-    border-bottom: 3px solid #aaa;
+    background: transparent;
+    border-radius: 0;
+    border-bottom: 4px solid #aaa;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .gb-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
-    color: #555;
+    color: var(--pink);
     letter-spacing: 2px;
     text-align: center;
     margin-bottom: 10px;
@@ -200,19 +228,21 @@
 
   /* SCREEN AREA */
   .gb-screen-frame {
-    background: #3d3d5c;
-    border-radius: 8px;
+    background: var(--dark);
+    border-radius: 0;
     padding: 12px;
-    border: 4px solid #2a2a3e;
-    box-shadow: inset 0 4px 8px rgba(0,0,0,0.5);
+    border: none;
+    box-shadow: none;
     position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .gb-screen {
     background: var(--bg);
     border-radius: 4px;
-    min-height: 500px;
-    height: calc(76.5vh - 220px);
+    flex: 1;
     border: 3px solid #1a1a2e;
     overflow: hidden;
     position: relative;
@@ -262,6 +292,7 @@
     justify-content: center;
     position: relative;
     min-height: 0;
+    background: #2a2a2a;
   }
 
   /* START SCREEN */
@@ -292,7 +323,7 @@
   .start-title {
     font-family: 'Press Start 2P', monospace;
     font-size: 9px;
-    color: var(--dark);
+    color: var(--yellow);
     line-height: 1.8;
     margin-bottom: 8px;
     text-shadow: 1px 1px 0 var(--pink);
@@ -301,7 +332,7 @@
   .start-sub {
     font-family: 'Silkscreen', monospace;
     font-size: 10px;
-    color: #666;
+    color: #ccc;
     margin-bottom: 20px;
     letter-spacing: 2px;
   }
@@ -355,6 +386,37 @@
     width: 100%;
   }
 
+  /* 문제 이미지 슬롯 */
+  .q-img-slot {
+    width: 100%;
+    height: 80px;
+    background: rgba(0,0,0,0.12);
+    border: 2px dashed rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .q-img-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .q-img-slot .img-placeholder {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: rgba(0,0,0,0.3);
+    text-align: center;
+    line-height: 1.8;
+    pointer-events: none;
+    user-select: none;
+  }
+
   .situation-icon {
     font-size: 24px;
     margin-bottom: 4px;
@@ -382,7 +444,7 @@
   .choice-btn {
     font-family: 'Silkscreen', monospace;
     font-size: 10px;
-    padding: 10px 12px;
+    padding: 0;
     background: white;
     border: 3px solid var(--dark);
     box-shadow: 3px 3px 0 var(--dark);
@@ -393,6 +455,47 @@
     letter-spacing: 0.5px;
     line-height: 1.4;
     width: 100%;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  /* 선지 이미지 슬롯 */
+  .choice-img-slot {
+    width: 52px;
+    min-width: 52px;
+    background: rgba(0,0,0,0.06);
+    border-right: 2px solid var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .choice-img-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .choice-img-slot .img-placeholder {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: rgba(0,0,0,0.25);
+    text-align: center;
+    padding: 4px;
+    line-height: 1.6;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .choice-label {
+    padding: 10px 12px;
+    flex: 1;
+    display: flex;
+    align-items: center;
   }
 
   .choice-btn:hover {
@@ -492,9 +595,9 @@
 
   /* GB BOTTOM */
   .gb-bottom {
-    padding: 16px 20px 24px;
-    background: #c8c8c8;
-    border-radius: 0 0 36px 36px;
+    padding: 14px 20px 18px;
+    background: transparent;
+    border-top: 4px solid #aaa;
   }
 
   .gb-controls {
@@ -511,8 +614,9 @@
 
   .dpad-h, .dpad-v {
     position: absolute;
-    background: #555;
+    background: var(--pink);
     border-radius: 2px;
+    opacity: 0.7;
   }
 
   .dpad-h {
@@ -529,7 +633,7 @@
     position: absolute;
     width: 33%; height: 33%;
     top: 33%; left: 33%;
-    background: #444;
+    background: var(--dark);
     border-radius: 50%;
   }
 
@@ -541,26 +645,25 @@
 
   .gb-btn {
     border-radius: 50%;
-    border: 3px solid #555;
+    border: 3px solid var(--pink);
     font-family: 'Silkscreen', monospace;
     font-size: 8px;
-    color: white;
+    color: var(--pink);
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 2px 2px 0 #333;
+    box-shadow: 2px 2px 0 var(--dark);
   }
 
   .gb-btn-a {
     width: 36px; height: 36px;
-    background: #cc3366;
   }
 
   .gb-btn-b {
     width: 30px; height: 30px;
-    background: #aa2244;
     margin-top: 16px;
   }
 
@@ -577,20 +680,22 @@
   }
 
   .mini-btn {
-    width: 28px; height: 10px;
-    background: #888;
+    width: 28px; height: 8px;
+    background: transparent;
     border-radius: 3px;
-    border: 2px solid #555;
+    border: 2px solid var(--pink);
+    opacity: 0.7;
   }
 
   .gb-brand {
     font-family: 'Silkscreen', monospace;
     font-size: 9px;
-    color: #555;
+    color: var(--pink);
     letter-spacing: 3px;
     text-transform: uppercase;
     text-align: center;
     margin-top: 8px;
+    opacity: 0.8;
   }
 
   /* ============ GAMEBOY CENTERED ============ */
@@ -967,7 +1072,7 @@
     white-space: nowrap;
     pointer-events: none;
     z-index: 20;
-    animation: levelupAnim 0.8s ease forwards;
+    animation: levelupAnim 1.8s ease forwards;
     display: none;
   }
 
@@ -985,15 +1090,13 @@
     nav a { font-size: 9px; }
     .about-section { padding: 4rem 1.5rem; }
     .section-title { font-size: 14px; }
-    .gb-screen { height: calc(76.5vh - 200px); min-height: 460px; }
   }
 
   @media (max-width: 480px) {
     .gameboy-section { padding: 80px 0.5rem 2rem; }
-    .gameboy-device { width: 100%; max-width: 390px; border-radius: 12px 12px 30px 30px; }
+    .gameboy-device { width: 90vw; max-width: 360px; border-radius: 0; }
     header { padding: 0 1rem; }
     nav { display: none; }
-    .gb-screen { height: calc(76.5vh - 180px); min-height: 423px; }
   }
 
   /* SHARE MODAL */
@@ -1193,6 +1296,7 @@
                   </div>
                 </div>
                 <div class="situation-box">
+                  <div class="q-img-slot" id="q-img-slot"><span class="img-placeholder">IMAGE SLOT</span></div>
                   <span class="situation-icon" id="sit-icon">🚇</span>
                   <div class="question-text" id="q-text">Loading...</div>
                 </div>
@@ -1334,11 +1438,12 @@
 const quizData = [
   {
     icon: '🚇',
+    img: null,          // 문제 이미지: 'https://...' 또는 null
     en: {
       q: 'You see empty seats in the subway...',
       a: [
-        { id: 'q1-a', text: 'Sit in the pink seat' },
-        { id: 'q1-b', text: 'Sit in the blue seat' }
+        { id: 'q1-a', text: 'Sit in the pink seat', img: null },
+        { id: 'q1-b', text: 'Sit in the blue seat', img: null }
       ],
       correct: 1,
       feedback: 'Pink seats are priority seats for elderly & pregnant!'
@@ -1346,8 +1451,8 @@ const quizData = [
     ms: {
       q: 'Anda nampak tempat duduk kosong dalam tren...',
       a: [
-        { id: 'q1-a', text: 'Duduk di kerusi merah jambu' },
-        { id: 'q1-b', text: 'Duduk di kerusi biru' }
+        { id: 'q1-a', text: 'Duduk di kerusi merah jambu', img: null },
+        { id: 'q1-b', text: 'Duduk di kerusi biru', img: null }
       ],
       correct: 1,
       feedback: 'Kerusi merah jambu adalah untuk warga emas & ibu mengandung!'
@@ -1355,11 +1460,12 @@ const quizData = [
   },
   {
     icon: '🛗',
+    img: null,
     en: {
       q: 'You are taking the elevator with someone...',
       a: [
-        { id: 'q2-a', text: 'Make small talk' },
-        { id: 'q2-b', text: 'Press the close button' }
+        { id: 'q2-a', text: 'Make small talk', img: null },
+        { id: 'q2-b', text: 'Press the close button', img: null }
       ],
       correct: 1,
       feedback: 'Koreans prefer silence in elevators. Just press close!'
@@ -1367,8 +1473,8 @@ const quizData = [
     ms: {
       q: 'Anda menaiki lif bersama seseorang...',
       a: [
-        { id: 'q2-a', text: 'Berbual mesra' },
-        { id: 'q2-b', text: 'Tekan butang tutup' }
+        { id: 'q2-a', text: 'Berbual mesra', img: null },
+        { id: 'q2-b', text: 'Tekan butang tutup', img: null }
       ],
       correct: 1,
       feedback: 'Orang Korea lebih suka diam dalam lif. Tekan sahaja butang tutup!'
@@ -1376,11 +1482,12 @@ const quizData = [
   },
   {
     icon: '🏪',
+    img: null,
     en: {
       q: 'You met a kind store owner...',
       a: [
-        { id: 'q3-a', text: 'Thank them verbally and smile' },
-        { id: 'q3-b', text: 'Give tips to appreciate the service' }
+        { id: 'q3-a', text: 'Thank them verbally and smile', img: null },
+        { id: 'q3-b', text: 'Give tips to appreciate the service', img: null }
       ],
       correct: 0,
       feedback: 'Tipping is NOT common in Korea! A warm thank-you is perfect.'
@@ -1388,8 +1495,8 @@ const quizData = [
     ms: {
       q: 'Anda jumpa pemilik kedai yang baik hati...',
       a: [
-        { id: 'q3-a', text: 'Ucapkan terima kasih dan senyum' },
-        { id: 'q3-b', text: 'Beri tip sebagai penghargaan' }
+        { id: 'q3-a', text: 'Ucapkan terima kasih dan senyum', img: null },
+        { id: 'q3-b', text: 'Beri tip sebagai penghargaan', img: null }
       ],
       correct: 0,
       feedback: 'Memberi tip TIDAK biasa di Korea! Ucapan terima kasih sudah cukup.'
@@ -1397,11 +1504,12 @@ const quizData = [
   },
   {
     icon: '🍽️',
+    img: null,
     en: {
       q: 'You need to order at the restaurant...',
       a: [
-        { id: 'q4-a', text: 'Make eye contact with staff' },
-        { id: 'q4-b', text: 'Use the ring bell to call service' }
+        { id: 'q4-a', text: 'Make eye contact with staff', img: null },
+        { id: 'q4-b', text: 'Use the ring bell to call service', img: null }
       ],
       correct: 1,
       feedback: 'Most Korean restaurants have a call bell on the table. Use it!'
@@ -1409,8 +1517,8 @@ const quizData = [
     ms: {
       q: 'Anda perlu membuat pesanan di restoran...',
       a: [
-        { id: 'q4-a', text: 'Cuba buat hubungan mata dengan pekerja' },
-        { id: 'q4-b', text: 'Guna loceng panggilan untuk panggil pelayan' }
+        { id: 'q4-a', text: 'Cuba buat hubungan mata dengan pekerja', img: null },
+        { id: 'q4-b', text: 'Guna loceng panggilan untuk panggil pelayan', img: null }
       ],
       correct: 1,
       feedback: 'Kebanyakan restoran Korea ada loceng di meja. Gunakannya!'
@@ -1473,13 +1581,38 @@ function renderQuestion() {
   document.getElementById('sit-icon').textContent = q.icon;
   document.getElementById('q-text').textContent = d.q;
 
+  // 문제 이미지 슬롯
+  const qImgSlot = document.getElementById('q-img-slot');
+  if (q.img) {
+    qImgSlot.innerHTML = `<img src="${q.img}" alt="question image">`;
+    qImgSlot.style.display = 'flex';
+  } else {
+    qImgSlot.innerHTML = `<span class="img-placeholder">IMAGE<br>SLOT</span>`;
+    qImgSlot.style.display = 'flex';
+  }
+
+  // 선지 렌더링
   const choices = document.getElementById('choices');
   choices.innerHTML = '';
   d.a.forEach((ans, i) => {
     const btn = document.createElement('button');
     btn.className = 'choice-btn';
     btn.id = ans.id;
-    btn.textContent = `${i === 0 ? 'A' : 'B'}. ${ans.text}`;
+
+    const imgSlot = document.createElement('div');
+    imgSlot.className = 'choice-img-slot';
+    if (ans.img) {
+      imgSlot.innerHTML = `<img src="${ans.img}" alt="choice image">`;
+    } else {
+      imgSlot.innerHTML = `<span class="img-placeholder">IMG</span>`;
+    }
+
+    const label = document.createElement('span');
+    label.className = 'choice-label';
+    label.textContent = `${i === 0 ? 'A' : 'B'}. ${ans.text}`;
+
+    btn.appendChild(imgSlot);
+    btn.appendChild(label);
     btn.onclick = () => selectAnswer(i, d.correct, d.feedback, d.a);
     choices.appendChild(btn);
   });
@@ -1526,7 +1659,7 @@ function updateHP() {
 function showLevelUp() {
   const el = document.getElementById('levelup');
   el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, 800);
+  setTimeout(() => { el.style.display = 'none'; }, 1800);
 }
 
 function showResult() {
