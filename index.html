@@ -1,636 +1,1675 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-EARTH Survival Guide | K-IQ Test</title>
-    <!-- 레트로 게임 폰트 -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MF9HVHH8');</script>
-    <!-- End Google Tag Manager -->
-    <style>
-        :root {
-            --bg-color: #FDF5E6;
-            --main-brown: #8B4513;
-            --point-red: #FF4500;
-            --success-green: #4CAF50;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Must-Know Korean Manner Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #E1FF46;
+    --cyan: #C0FFFF;
+    --pink: #FF8EC6;
+    --bg: #FEFFCE;
+    --dark: #1a1a2e;
+    --darker: #0f0f1a;
+    --pixel-border: 4px;
+  }
 
-        body {
-            background-color: #1a110a;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            color: var(--main-brown);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .pixel-font { font-family: 'Press Start 2P', cursive; line-height: 1.5; }
+  html { scroll-behavior: smooth; }
 
-        .game-frame {
-            width: 100%;
-            max-width: 450px;
-            height: 95vh;
-            max-height: 850px;
-            background-color: var(--bg-color);
-            border: 6px solid var(--main-brown);
-            border-radius: 16px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-        }
+  body {
+    font-family: 'Pixelify Sans', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
 
-        .screen {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-            animation: fadeIn 0.4s ease-out;
-            position: relative;
-            cursor: pointer;
-        }
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
 
-        .active-screen { display: flex; }
+  /* PIXEL BORDER MIXIN */
+  .pixel-box {
+    border: 4px solid var(--dark);
+    box-shadow: 6px 6px 0 var(--dark);
+    image-rendering: pixelated;
+  }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .pixel-box-inset {
+    border: 4px solid var(--dark);
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.5), 6px 6px 0 var(--dark);
+  }
 
-        .media-layer {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            background: #2c1e14; overflow: hidden;
-        }
-        
-        .media-layer video, .media-layer img { 
-            width: 100%; height: 100%; object-fit: cover; z-index: 5; 
-            position: absolute; top: 0; left: 0;
-        }
+  /* ============ HEADER ============ */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--dark);
+    border-bottom: 4px solid var(--yellow);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-        #start-screen .media-layer video, 
-        #start-screen .media-layer img {
-            object-fit: fill;
-        }
-        
-        .media-placeholder {
-            width: 100%; height: 100%; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; background: #3d2b1f;
-            color: #8b6d5c; text-align: center; padding: 20px;
-            position: absolute; top: 0; left: 0;
-        }
+  .logo {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--yellow);
+    text-shadow: 2px 2px 0 var(--pink);
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
 
-        .dialogue-container {
-            position: absolute; bottom: 130px; left: 50%; transform: translateX(-50%);
-            width: 92%; background: white; border: 4px solid var(--main-brown);
-            padding: 15px; z-index: 20; border-radius: 8px; box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
-        }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
 
-        .choice-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 30; display: none;
-            flex-direction: column; justify-content: flex-start; align-items: center;
-            padding: 20px; overflow-y: auto;
-            cursor: default;
-        }
+  .nav-btn {
+    font-family: 'Silkscreen', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: color 0.1s;
+    position: relative;
+    padding-bottom: 2px;
+  }
 
-        .choice-btn {
-            background: white; border: 3px solid var(--main-brown); width: 100%;
-            margin-bottom: 12px; padding: 10px; display: flex; flex-direction: column;
-            gap: 8px; transition: all 0.2s; text-align: left; border-radius: 12px;
-            cursor: pointer;
-        }
+  .nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--yellow);
+    transition: width 0.2s;
+  }
 
-        .choice-btn:hover { background: var(--bg-color); transform: translateY(-2px); }
+  .nav-btn:hover, .nav-btn.active {
+    color: var(--yellow);
+  }
 
-        .choice-img-container {
-            width: 100%; aspect-ratio: 16 / 9; background: #eee;
-            border: 2px solid var(--main-brown); border-radius: 6px; overflow: hidden;
-            position: relative;
-        }
-        .choice-img-container img { width: 100%; height: 100%; object-fit: cover; }
+  .nav-btn:hover::after, .nav-btn.active::after {
+    width: 100%;
+  }
 
-        .num-box {
-            background: #333; color: white; padding: 4px 10px; font-size: 14px;
-            font-family: 'Press Start 2P'; margin-right: 12px; border-radius: 4px;
-        }
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    background: var(--darker);
+    border: 2px solid var(--cyan);
+    border-radius: 0;
+    overflow: hidden;
+  }
 
-        .heart-bar {
-            position: absolute; top: 20px; right: 20px; z-index: 40;
-            display: flex; gap: 5px; background: rgba(0,0,0,0.5);
-            padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
-        }
+  .lang-toggle button {
+    font-family: 'Silkscreen', monospace;
+    font-size: 9px;
+    padding: 6px 10px;
+    background: transparent;
+    border: none;
+    color: var(--cyan);
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.1s;
+  }
 
-        .pixel-btn-simple {
-            border: 3px solid var(--main-brown); background: white; padding: 12px;
-            font-family: 'Press Start 2P', cursive; font-size: 10px; cursor: pointer;
-            box-shadow: 4px 4px 0 var(--main-brown); width: 100%; transition: all 0.1s;
-        }
-        .pixel-btn-simple:active { box-shadow: 0 0 0 var(--main-brown); transform: translate(2px, 2px); }
+  .lang-toggle button.active {
+    background: var(--cyan);
+    color: var(--dark);
+  }
 
-        .portrait { width: 55px; height: 55px; border: 2px solid var(--main-brown); border-radius: 4px; object-fit: cover; background: #ddd; }
+  /* ============ GAMEBOY WRAPPER ============ */
+  .gameboy-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 2rem 4rem;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
 
-        .feedback-content {
-            position: relative; z-index: 10; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: space-between;
-            align-items: center; 
-            padding: 60px 20px 140px 20px; 
-        }
-        
-        .desc-box {
-            background-color: rgba(255, 255, 255, 0.95); border: 4px solid var(--main-brown);
-            padding: 20px; box-shadow: 8px 8px 0px rgba(0,0,0,0.2); width: 100%; max-width: 380px;
-            border-radius: 8px;
-            margin-top: auto;
-        }
+  .gameboy-section::before {
+    content: '★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆';
+    position: absolute;
+    top: 80px; left: 0;
+    font-size: 20px;
+    color: var(--pink);
+    opacity: 0.3;
+    white-space: nowrap;
+    font-family: 'Press Start 2P', monospace;
+    letter-spacing: 8px;
+  }
 
-        .game-over-title {
-            color: #FF0000; font-size: 3rem; text-shadow: 4px 4px 0px #000;
-            text-align: center; margin-bottom: 20px; animation: pulse 1s infinite;
-            line-height: 1;
-        }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+  .section-bg-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--pink) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.15;
+    pointer-events: none;
+  }
 
-        #toast {
-            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.8); color: white; padding: 10px 20px;
-            border-radius: 20px; z-index: 1000; display: none;
-        }
+  /* GAMEBOY DEVICE */
+  .gameboy-device {
+    width: 420px;
+    max-width: 95vw;
+    background: #c8c8c8;
+    border-radius: 16px 16px 40px 40px;
+    border: 4px solid #888;
+    box-shadow: 8px 8px 0 #555, inset 0 2px 0 rgba(255,255,255,0.6);
+    position: relative;
+    flex-shrink: 0;
+  }
 
-        .tap-guide {
-            color: white; font-size: 11px; opacity: 0.8;
-            font-family: 'Press Start 2P', cursive;
-            text-align: center;
-            width: 100%;
-        }
+  .gb-top {
+    padding: 20px 20px 12px;
+    background: #d0d0d0;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 3px solid #aaa;
+  }
 
-        #start-screen .tap-guide {
-            position: absolute;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    </style>
+  .gb-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #555;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* SCREEN AREA */
+  .gb-screen-frame {
+    background: #3d3d5c;
+    border-radius: 8px;
+    padding: 12px;
+    border: 4px solid #2a2a3e;
+    box-shadow: inset 0 4px 8px rgba(0,0,0,0.5);
+    position: relative;
+  }
+
+  .gb-screen {
+    background: var(--bg);
+    border-radius: 4px;
+    min-height: 500px;
+    height: calc(76.5vh - 220px);
+    border: 3px solid #1a1a2e;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* SCREEN STATUS BAR */
+  .screen-status {
+    background: var(--dark);
+    padding: 6px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--yellow);
+  }
+
+  .screen-status span {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+  }
+
+  .hp-bar {
+    display: flex;
+    gap: 2px;
+  }
+
+  .hp-pip {
+    width: 8px;
+    height: 8px;
+    background: #FF8EC6;
+    border: 1px solid var(--dark);
+    image-rendering: pixelated;
+  }
+
+  .hp-pip.empty { background: #444; }
+
+  /* SCREEN CONTENT */
+  .screen-content {
+    flex: 1;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 0;
+  }
+
+  /* START SCREEN */
+  .start-screen {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .alien-sprite {
+    width: 80px;
+    height: 80px;
+    display: block;
+    margin: 0 auto;
+    image-rendering: pixelated;
+    animation: float 2s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .start-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--dark);
+    line-height: 1.8;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 0 var(--pink);
+  }
+
+  .start-sub {
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  .blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* QUIZ SCREEN */
+  .quiz-screen { display: none; width: 100%; }
+
+  .progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .progress-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dark);
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    background: #ddd;
+    border: 2px solid var(--dark);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--yellow);
+    border-right: 2px solid var(--dark);
+    transition: width 0.4s ease;
+  }
+
+  .situation-box {
+    background: var(--cyan);
+    border: 3px solid var(--dark);
+    box-shadow: 3px 3px 0 var(--dark);
+    padding: 10px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+
+  .situation-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+    display: block;
+    text-align: center;
+    image-rendering: pixelated;
+  }
+
+  .question-text {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .choice-btn {
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    padding: 10px 12px;
+    background: white;
+    border: 3px solid var(--dark);
+    box-shadow: 3px 3px 0 var(--dark);
+    cursor: pointer;
+    text-align: left;
+    color: var(--dark);
+    transition: all 0.1s;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+    width: 100%;
+  }
+
+  .choice-btn:hover {
+    background: var(--yellow);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--dark);
+  }
+
+  .choice-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--dark);
+  }
+
+  .choice-btn.correct {
+    background: #C0FFFF;
+    border-color: #00aa66;
+    box-shadow: 3px 3px 0 #00aa66;
+  }
+
+  .choice-btn.wrong {
+    background: #ffcccc;
+    border-color: #cc3333;
+    box-shadow: 3px 3px 0 #cc3333;
+  }
+
+  /* FEEDBACK */
+  .feedback-overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(254,255,206,0.9);
+    z-index: 10;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .feedback-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    animation: popIn 0.3s ease;
+  }
+
+  .feedback-sub {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    text-align: center;
+    padding: 0 12px;
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* RESULT SCREEN */
+  .result-screen {
+    display: none;
+    width: 100%;
+    text-align: center;
+  }
+
+  .result-badge {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 12px;
+    image-rendering: pixelated;
+  }
+
+  .result-score {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    color: var(--dark);
+    margin-bottom: 6px;
+    text-shadow: 2px 2px 0 var(--pink);
+  }
+
+  .result-grade {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: var(--dark);
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+
+  .result-msg {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* GB BOTTOM */
+  .gb-bottom {
+    padding: 16px 20px 24px;
+    background: #c8c8c8;
+    border-radius: 0 0 36px 36px;
+  }
+
+  .gb-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dpad {
+    width: 70px;
+    height: 70px;
+    position: relative;
+  }
+
+  .dpad-h, .dpad-v {
+    position: absolute;
+    background: #555;
+    border-radius: 2px;
+  }
+
+  .dpad-h {
+    width: 100%; height: 33%;
+    top: 33%; left: 0;
+  }
+
+  .dpad-v {
+    width: 33%; height: 100%;
+    top: 0; left: 33%;
+  }
+
+  .dpad-center {
+    position: absolute;
+    width: 33%; height: 33%;
+    top: 33%; left: 33%;
+    background: #444;
+    border-radius: 50%;
+  }
+
+  .ab-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .gb-btn {
+    border-radius: 50%;
+    border: 3px solid #555;
+    font-family: 'Silkscreen', monospace;
+    font-size: 8px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 #333;
+  }
+
+  .gb-btn-a {
+    width: 36px; height: 36px;
+    background: #cc3366;
+  }
+
+  .gb-btn-b {
+    width: 30px; height: 30px;
+    background: #aa2244;
+    margin-top: 16px;
+  }
+
+  .select-start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .sel-start-btns {
+    display: flex;
+    gap: 12px;
+  }
+
+  .mini-btn {
+    width: 28px; height: 10px;
+    background: #888;
+    border-radius: 3px;
+    border: 2px solid #555;
+  }
+
+  .gb-brand {
+    font-family: 'Silkscreen', monospace;
+    font-size: 9px;
+    color: #555;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  /* ============ GAMEBOY CENTERED ============ */
+  .hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* START SCREEN CTA BUTTON (inside screen) */
+  .screen-cta-btn {
+    font-family: 'Silkscreen', monospace;
+    font-size: 13px;
+    background: var(--yellow);
+    color: var(--dark);
+    border: 3px solid var(--dark);
+    box-shadow: 5px 5px 0 var(--dark);
+    padding: 14px 28px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.1s;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .screen-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 30%; height: 200%;
+    background: rgba(255,255,255,0.5);
+    transform: skewX(-20deg);
+    animation: shine 3s infinite;
+  }
+
+  @keyframes shine {
+    0% { left: -60%; }
+    20% { left: 120%; }
+    100% { left: 120%; }
+  }
+
+  .screen-cta-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--dark);
+  }
+
+  .screen-cta-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--dark);
+  }
+
+  .screen-tag {
+    font-family: 'Silkscreen', monospace;
+    font-size: 8px;
+    background: var(--pink);
+    color: var(--dark);
+    padding: 5px 12px;
+    border: 2px solid var(--dark);
+    letter-spacing: 1px;
+    display: inline-block;
+    margin: 0 auto;
+  }
+
+  /* ============ ABOUT SECTION ============ */
+  .about-section {
+    padding: 6rem 2rem;
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--yellow) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.06;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+  }
+
+  .section-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--cyan);
+    letter-spacing: 4px;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    color: var(--yellow);
+    text-shadow: 3px 3px 0 var(--pink);
+    line-height: 1.6;
+  }
+
+  .about-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .about-card {
+    background: var(--bg);
+    border: 4px solid var(--yellow);
+    box-shadow: 8px 8px 0 var(--yellow);
+    padding: 2rem;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .about-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 var(--yellow);
+  }
+
+  .about-card:nth-child(2) {
+    border-color: var(--cyan);
+    box-shadow: 8px 8px 0 var(--cyan);
+  }
+
+  .about-card:nth-child(2):hover {
+    box-shadow: 12px 12px 0 var(--cyan);
+  }
+
+  .about-card:nth-child(3) {
+    border-color: var(--pink);
+    box-shadow: 8px 8px 0 var(--pink);
+  }
+
+  .about-card:nth-child(3):hover {
+    box-shadow: 12px 12px 0 var(--pink);
+  }
+
+  .card-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 36px;
+    color: var(--yellow);
+    display: block;
+    margin-bottom: 16px;
+    text-shadow: 3px 3px 0 var(--dark);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .about-card:nth-child(2) .card-num { color: var(--cyan); }
+  .about-card:nth-child(3) .card-num { color: var(--pink); }
+
+  .card-icon-pixel {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--dark);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  .card-desc {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #444;
+    line-height: 1.7;
+  }
+
+  .card-badge {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Silkscreen', monospace;
+    font-size: 8px;
+    padding: 6px 12px;
+    border: 2px solid var(--dark);
+    letter-spacing: 1px;
+  }
+
+  .about-card:nth-child(1) .card-badge { background: var(--yellow); }
+  .about-card:nth-child(2) .card-badge { background: var(--cyan); }
+  .about-card:nth-child(3) .card-badge { background: var(--pink); }
+
+  /* ============ SHARE SECTION ============ */
+  .share-section {
+    padding: 6rem 2rem;
+    background: var(--pink);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .share-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.1) 20px, rgba(255,255,255,0.1) 40px);
+  }
+
+  .share-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .share-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--dark);
+    text-shadow: 3px 3px 0 white;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .share-sub {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 36px;
+    opacity: 0.8;
+  }
+
+  .share-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .share-btn {
+    font-family: 'Silkscreen', monospace;
+    font-size: 12px;
+    padding: 14px 28px;
+    border: 4px solid var(--dark);
+    box-shadow: 6px 6px 0 var(--dark);
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .share-btn:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--dark);
+  }
+
+  .share-btn-primary {
+    background: var(--yellow);
+    color: var(--dark);
+  }
+
+  .share-btn-secondary {
+    background: white;
+    color: var(--dark);
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--dark);
+    color: var(--yellow);
+    font-family: 'Silkscreen', monospace;
+    font-size: 11px;
+    padding: 12px 24px;
+    border: 3px solid var(--yellow);
+    letter-spacing: 1px;
+    transition: transform 0.3s;
+    z-index: 999;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* FOOTER */
+  footer {
+    background: var(--darker);
+    padding: 2rem;
+    text-align: center;
+    border-top: 4px solid var(--yellow);
+  }
+
+  footer p {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #666;
+    letter-spacing: 2px;
+    line-height: 2;
+  }
+
+  /* RESULT BUTTONS */
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .result-btn {
+    font-family: 'Silkscreen', monospace;
+    font-size: 9px;
+    padding: 10px;
+    border: 3px solid var(--dark);
+    box-shadow: 3px 3px 0 var(--dark);
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.1s;
+    width: 100%;
+  }
+
+  .result-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--dark);
+  }
+
+  .result-btn-primary { background: var(--yellow); color: var(--dark); }
+  .result-btn-secondary { background: var(--cyan); color: var(--dark); }
+  .result-btn-tertiary { background: var(--pink); color: var(--dark); }
+
+  /* PIXEL ART STARS */
+  .pixel-stars {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .pstar {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--pink);
+    image-rendering: pixelated;
+    animation: twinkle 2s ease-in-out infinite;
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  /* LEVEL UP EFFECT */
+  .levelup {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--yellow);
+    text-shadow: 2px 2px 0 var(--dark);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 20;
+    animation: levelupAnim 0.8s ease forwards;
+    display: none;
+  }
+
+  @keyframes levelupAnim {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 1; transform: translate(-50%, -80%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -120%) scale(1); }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .gameboy-device { width: 360px; }
+    nav { gap: 1rem; }
+    .logo { font-size: 8px; }
+    nav a { font-size: 9px; }
+    .about-section { padding: 4rem 1.5rem; }
+    .section-title { font-size: 14px; }
+    .gb-screen { height: calc(76.5vh - 200px); min-height: 460px; }
+  }
+
+  @media (max-width: 480px) {
+    .gameboy-section { padding: 80px 0.5rem 2rem; }
+    .gameboy-device { width: 100%; max-width: 390px; border-radius: 12px 12px 30px 30px; }
+    header { padding: 0 1rem; }
+    nav { display: none; }
+    .gb-screen { height: calc(76.5vh - 180px); min-height: 423px; }
+  }
+
+  /* SHARE MODAL */
+  .share-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,0.75);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-modal-overlay.open {
+    display: flex;
+  }
+
+  .share-modal {
+    background: var(--bg);
+    border: 4px solid var(--dark);
+    box-shadow: 8px 8px 0 var(--dark);
+    padding: 2rem 1.75rem;
+    width: 340px;
+    max-width: 90vw;
+    text-align: center;
+  }
+
+  .share-modal-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: var(--dark);
+    text-shadow: 2px 2px 0 var(--pink);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .share-modal-sub {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 1.5rem;
+  }
+
+  .share-modal-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+
+  .share-social-btn {
+    font-family: 'Silkscreen', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 12px 16px;
+    border: 3px solid var(--dark);
+    box-shadow: 3px 3px 0 var(--dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.1s;
+    width: 100%;
+  }
+
+  .share-social-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--dark);
+  }
+
+  .share-social-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--dark);
+  }
+
+  .share-social-btn.twitter   { background: #000; color: #fff; }
+  .share-social-btn.facebook  { background: #1877f2; color: #fff; }
+  .share-social-btn.whatsapp  { background: #25d366; color: #fff; }
+  .share-social-btn.telegram  { background: #229ed9; color: #fff; }
+  .share-social-btn.copy-modal { background: var(--yellow); color: var(--dark); }
+
+  .share-modal-close {
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    background: transparent;
+    border: 2px solid #aaa;
+    color: #888;
+    padding: 8px 16px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.1s;
+  }
+
+  .share-modal-close:hover {
+    border-color: var(--dark);
+    color: var(--dark);
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MF9HVHH8"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-    <div id="toast">복사되었습니다!</div>
 
-    <div class="game-frame">
-        <!-- 1. 시작 화면 -->
-        <section id="start-screen" class="screen active-screen" onclick="startGame()">
-            <div class="media-layer">
-                <video autoplay loop muted playsinline id="intro-video">
-                    <source src="0. OPENING.mp4" type="video/mp4">
-                </video>
-                <div class="media-placeholder pixel-font" id="intro-placeholder">
-                    <div class="text-4xl mb-4">🇰🇷</div>
-                    K-EARTH<br>SURVIVAL
+<!-- HEADER -->
+<header>
+  <div class="logo">KOREAN<br>MANNER<br>QUIZ</div>
+  <nav>
+    <button class="nav-btn active" onclick="smoothScroll('quiz')">Quiz</button>
+    <button class="nav-btn" onclick="smoothScroll('about')">About Quiz</button>
+    <button class="nav-btn" onclick="smoothScroll('share')">Share</button>
+  </nav>
+  <div class="lang-toggle">
+    <button class="active" onclick="setLang('en')">EN</button>
+    <button onclick="setLang('ms')">BM</button>
+  </div>
+</header>
+
+<!-- SECTION 1: QUIZ -->
+<section id="quiz" class="gameboy-section">
+  <div class="section-bg-dots"></div>
+  <div class="pixel-stars" id="stars"></div>
+
+  <div class="hero-content">
+
+    <!-- GAMEBOY (centered, no hero-text beside it) -->
+    <div class="gameboy-device">
+      <div class="gb-top">
+        <div class="gb-label">◆ MANNER BOY COLOR ◆</div>
+        <div class="gb-screen-frame">
+          <div class="gb-screen">
+            <!-- STATUS BAR -->
+            <div class="screen-status">
+              <span>MANNER BOY</span>
+              <div class="hp-bar">
+                <div class="hp-pip" id="hp1"></div>
+                <div class="hp-pip" id="hp2"></div>
+                <div class="hp-pip" id="hp3"></div>
+                <div class="hp-pip" id="hp4"></div>
+              </div>
+              <span id="q-count">Q 0/4</span>
+            </div>
+
+            <!-- SCREEN CONTENT -->
+            <div class="screen-content" id="screen-content">
+              <!-- FEEDBACK OVERLAY -->
+              <div class="feedback-overlay" id="feedback-overlay">
+                <span class="feedback-text" id="feedback-emoji"></span>
+                <span class="feedback-sub" id="feedback-text"></span>
+              </div>
+              <!-- LEVELUP -->
+              <div class="levelup" id="levelup">★ LEVEL UP!</div>
+
+              <!-- START SCREEN -->
+              <div class="start-screen" id="start-screen">
+                <span class="screen-tag" id="screen-tag">★ 1 MIN. QUIZ ★</span>
+                <svg class="alien-sprite" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="20" y="28" width="24" height="20" fill="#C0FFFF" rx="2"/>
+                  <rect x="24" y="24" width="16" height="12" fill="#C0FFFF" rx="2"/>
+                  <rect x="20" y="12" width="24" height="20" fill="#E1FF46" rx="4"/>
+                  <rect x="24" y="18" width="6" height="6" fill="#1a1a2e"/>
+                  <rect x="34" y="18" width="6" height="6" fill="#1a1a2e"/>
+                  <rect x="25" y="19" width="2" height="2" fill="white"/>
+                  <rect x="35" y="19" width="2" height="2" fill="white"/>
+                  <rect x="30" y="8" width="4" height="6" fill="#FF8EC6"/>
+                  <rect x="28" y="6" width="8" height="4" fill="#FF8EC6"/>
+                  <rect x="22" y="48" width="6" height="8" fill="#C0FFFF"/>
+                  <rect x="36" y="48" width="6" height="8" fill="#C0FFFF"/>
+                  <rect x="20" y="54" width="10" height="4" fill="#1a1a2e"/>
+                  <rect x="34" y="54" width="10" height="4" fill="#1a1a2e"/>
+                  <rect x="26" y="24" width="12" height="2" fill="#1a1a2e"/>
+                  <rect x="24" y="22" width="2" height="4" fill="#1a1a2e"/>
+                  <rect x="38" y="22" width="2" height="4" fill="#1a1a2e"/>
+                </svg>
+                <div class="start-title" id="screen-title">MUST-KNOW<br>KOREAN<br>MANNER QUIZ</div>
+                <div class="start-sub" id="screen-sub">Are you ready for Korea?</div>
+                <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
+                <div class="start-sub blink" style="margin-top:8px;" id="screen-blink">PRESS START →</div>
+              </div>
+
+              <!-- QUIZ SCREEN -->
+              <div class="quiz-screen" id="quiz-screen">
+                <div class="progress-bar-wrap">
+                  <span class="progress-label" id="prog-label">1/4</span>
+                  <div class="progress-track">
+                    <div class="progress-fill" id="prog-fill" style="width:25%"></div>
+                  </div>
                 </div>
-            </div>
-            <div class="relative z-10 h-full flex flex-col justify-end p-10 bg-gradient-to-t from-black via-black/40 to-transparent text-center">
-                <h1 class="pixel-font text-white text-lg mb-48 leading-relaxed tracking-tight">CAN YOU SURVIVE<br>IN KOREA?</h1>
-                <div class="tap-guide blink">TAP ANYWHERE TO START</div>
-            </div>
-        </section>
-
-        <!-- 2. 게임 플레이 화면 -->
-        <section id="gameplay-screen" class="screen" onclick="handleGameplayTap()">
-            <div class="heart-bar" id="lives-display"></div>
-            
-            <div class="media-layer">
-                <video id="quiz-video" muted playsinline style="display:none;"></video>
-                <div id="quiz-placeholder" class="media-placeholder">
-                    <div id="quiz-icon" class="text-6xl mb-4">📍</div>
-                    <div class="pixel-font text-xs opacity-50">SCENE LOADING...</div>
+                <div class="situation-box">
+                  <span class="situation-icon" id="sit-icon">🚇</span>
+                  <div class="question-text" id="q-text">Loading...</div>
                 </div>
-            </div>
+                <div class="choices" id="choices"></div>
+              </div>
 
-            <div id="choice-area" class="choice-overlay" onclick="event.stopPropagation()">
-                <div class="pixel-font text-white text-[10px] mb-6 tracking-widest text-center w-full">▼ SELECT YOUR ACTION</div>
-                
-                <!-- 선택지 A -->
-                <button onclick="checkAnswer('A')" class="choice-btn">
-                    <div class="choice-img-container">
-                        <img id="img-a" src="" alt="Option A" onerror="this.parentElement.querySelector('.img-error-placeholder').style.display='flex'; this.style.display='none';">
-                        <div class="img-error-placeholder absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-400 font-bold" style="display:none;">IMAGE</div>
-                    </div>
-                    <div class="flex items-center px-2 py-1"><span class="num-box">1</span><span id="text-a" class="font-bold text-[15px] text-slate-800 leading-tight"></span></div>
-                </button>
-
-                <!-- 선택지 B -->
-                <button onclick="checkAnswer('B')" class="choice-btn">
-                    <div class="choice-img-container">
-                        <img id="img-b" src="" alt="Option B" onerror="this.parentElement.querySelector('.img-error-placeholder').style.display='flex'; this.style.display='none';">
-                        <div class="img-error-placeholder absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-400 font-bold" style="display:none;">IMAGE</div>
-                    </div>
-                    <div class="flex items-center px-2 py-1"><span class="num-box">2</span><span id="text-b" class="font-bold text-[15px] text-slate-800 leading-tight"></span></div>
-                </button>
-            </div>
-
-            <div class="dialogue-container">
-                <div class="flex gap-4 items-center">
-                    <img src="image (3).jpg" class="portrait" alt="Guide" onerror="this.src='https://api.dicebear.com/7.x/pixel-art/svg?seed=K-Guide'">
-                    <div class="flex-1"><p id="dialogue-text" class="text-[13px] font-bold leading-snug text-slate-700"></p></div>
+              <!-- RESULT SCREEN -->
+              <div class="result-screen" id="result-screen">
+                <svg class="result-badge" id="result-badge" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="10" width="60" height="60" fill="#E1FF46" rx="4"/>
+                  <rect x="14" y="14" width="52" height="52" fill="none" stroke="#1a1a2e" stroke-width="3"/>
+                  <text x="40" y="48" text-anchor="middle" font-family="'Press Start 2P'" font-size="22" fill="#1a1a2e">★</text>
+                </svg>
+                <div class="result-score" id="result-score">4/4</div>
+                <div class="result-grade" id="result-grade">BEST!</div>
+                <div class="result-msg" id="result-msg">You're a Korean manner pro!</div>
+                <div class="result-actions">
+                  <button class="result-btn result-btn-primary" onclick="restartQuiz()">↩ TRY AGAIN</button>
+                  <button class="result-btn result-btn-secondary" onclick="shareResult()">↗ SHARE RESULT</button>
+                  <button class="result-btn result-btn-tertiary" onclick="copyLink()">⎘ COPY LINK</button>
                 </div>
-                <div class="absolute bottom-2 right-4 text-[#8B4513] text-[10px] blink">▼</div>
+              </div>
             </div>
-            
-            <div class="absolute bottom-[105px] left-0 w-full text-center z-10">
-                <div id="quiz-tap-guide" class="tap-guide blink text-[9px] opacity-60">TAP TO SEE CHOICES</div>
+          </div>
+        </div>
+      </div>
+      <div class="gb-bottom">
+        <div class="gb-controls">
+          <div class="dpad">
+            <div class="dpad-h"></div>
+            <div class="dpad-v"></div>
+            <div class="dpad-center"></div>
+          </div>
+          <div class="select-start">
+            <div class="sel-start-btns">
+              <div class="mini-btn"></div>
+              <div class="mini-btn"></div>
             </div>
-        </section>
-
-        <!-- 3. 피드백 화면 -->
-        <section id="feedback-screen" class="screen bg-black" onclick="toNext()">
-            <div class="media-layer">
-                <img id="feedback-bg-img" src="" alt="Feedback BG" style="display:none;">
-                <div id="feedback-placeholder" class="media-placeholder" style="background: #1a1a1a; display:none;"></div>
-            </div>
-            <div class="feedback-content">
-                <div class="flex flex-col items-center">
-                    <h2 id="feedback-title" class="pixel-font drop-shadow-[0_4px_4px_rgba(0,0,0,1)] text-center mb-2" style="font-size: 2.5rem;"></h2>
-                    <div class="tap-guide blink">TAP TO CONTINUE</div>
-                </div>
-                <!-- 하단에 배치될 설명 박스 -->
-                <div class="desc-box">
-                    <p id="feedback-desc" class="text-[15px] text-slate-800 leading-relaxed font-bold text-center"></p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. 게임 오버 화면 -->
-        <section id="game-over-screen" class="screen bg-[#1a110a]" onclick="location.reload()">
-            <div class="media-layer opacity-60">
-                <img src="6.GAMEOVER_IMAGE.jpg" alt="Game Over Background" onerror="this.style.display='none'">
-                <div class="media-placeholder" style="background: #1a110a;"></div>
-            </div>
-            <div class="feedback-content h-full flex flex-col">
-                <div class="mt-10 mb-2 text-center w-full z-20">
-                    <h2 class="pixel-font game-over-title !mb-2">GAME OVER</h2>
-                    <p class="text-white opacity-70 font-bold px-10 text-[14px]">
-                        You couldn't survive the cultural differences...
-                    </p>
-                </div>
-                
-                <div class="flex-1"></div>
-
-                <div class="flex flex-col items-center mb-4 w-full z-20" onclick="event.stopPropagation()">
-                    <div class="tap-guide blink mb-6">TAP ANYWHERE TO RETRY</div>
-                    
-                    <div class="grid gap-3 w-full max-w-xs mx-auto">
-                        <button onclick="location.reload()" class="pixel-btn-simple !bg-[#FF0000] !text-white !border-black">RETRY MISSION</button>
-                        <button onclick="copyGameLink(this)" class="pixel-btn-simple !bg-white !text-slate-800 !border-slate-800">COPY SCORE 🔗</button>
-                        <button onclick="shareToSocial()" class="pixel-btn-simple !bg-[#FF4500] !text-white !border-black">SHARE ON SOCIAL MEDIA 📱</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. 결과 화면 -->
-        <section id="result-screen" class="screen p-6 bg-[#FDF5E6]" style="cursor: default;">
-            <div class="text-center w-full flex flex-col h-full px-4 overflow-y-auto">
-                <div class="mt-10 mb-2">
-                    <div class="pixel-font text-[10px] text-[#FF4500] mb-2 uppercase tracking-tighter">Mission Terminated Successfully</div>
-                    <h2 class="text-xl font-black text-slate-800">Your Final K-Grade</h2>
-                </div>
-
-                <div id="badge-area" class="flex-1 flex items-center justify-center min-h-[160px]">
-                    <img id="result-badge" src="" alt="Badge" class="w-44 h-44 object-contain mx-auto" style="display:none;">
-                </div>
-
-                <div class="flex flex-col items-center mb-28">
-                    <div class="bg-white border-4 border-[#8B4513] p-5 mb-6 text-left rounded-lg shadow-inner w-full max-w-sm mx-auto">
-                        <p id="result-desc" class="text-[14px] leading-relaxed text-slate-700 font-bold text-center"></p>
-                    </div>
-
-                    <div class="grid gap-3 w-full max-w-xs mx-auto">
-                        <button onclick="location.reload()" class="pixel-btn-simple">Retry Mission</button>
-                        <button onclick="copyGameLink(this)" class="pixel-btn-simple !bg-white !text-blue-600 !border-blue-600">Copy Result Link 🔗</button>
-                        <button onclick="shareToSocial()" class="pixel-btn-simple !bg-[#FF4500] !text-white !border-black">Share on Social Media 📱</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <div class="gb-brand">SELECT · START</div>
+          </div>
+          <div class="ab-buttons">
+            <div class="gb-btn gb-btn-b">B</div>
+            <div class="gb-btn gb-btn-a">A</div>
+          </div>
+        </div>
+        <div class="gb-brand" style="margin-top:12px; font-size:11px; letter-spacing:4px;">MANNER BOY™</div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <script>
-function trackConversion(type) {
-    if (!sessionStorage.getItem('conversion_sent')) {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            'event': 'SubmitForm',
-            'conversion_type': type
-        });
-        
-        sessionStorage.setItem('conversion_sent', 'true');
+<!-- SECTION 2: ABOUT -->
+<section id="about" class="about-section">
+  <div class="section-header reveal">
+    <span class="section-num">— SECTION 02 —</span>
+    <h2 class="section-title">ABOUT<br>THE QUIZ</h2>
+  </div>
+  <div class="about-cards">
+    <div class="about-card reveal">
+      <span class="card-num">01</span>
+      <span class="card-icon-pixel">🗺️</span>
+      <div class="card-title">LEARN BEFORE<br>YOU LAND</div>
+      <p class="card-desc">Master basic Korean etiquette before your trip. Short, sharp lessons from real situations travelers face every day.</p>
+      <span class="card-badge">★ TRAVEL PREP</span>
+    </div>
+    <div class="about-card reveal">
+      <span class="card-num">02</span>
+      <span class="card-icon-pixel">🚇</span>
+      <div class="card-title">PLAY THROUGH<br>REAL SITUATIONS</div>
+      <p class="card-desc">Airports, subways, restaurants, cafes — experience actual Korea travel moments in game form. No boring lectures.</p>
+      <span class="card-badge">★ REAL SCENARIOS</span>
+    </div>
+    <div class="about-card reveal">
+      <span class="card-num">03</span>
+      <span class="card-icon-pixel">🏆</span>
+      <div class="card-title">GET YOUR<br>TRAVEL BADGE</div>
+      <p class="card-desc">Earn a unique traveler grade based on your score. Share your badge and challenge friends to beat your result!</p>
+      <span class="card-badge">★ SHARE & FLEX</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: SHARE -->
+<section id="share" class="share-section">
+  <div class="share-inner reveal">
+    <h2 class="share-title">CHALLENGE<br>YOUR FRIENDS!</h2>
+    <p class="share-sub">Think they know Korean manners better than you? 👾</p>
+    <div class="share-buttons">
+      <button class="share-btn share-btn-primary" onclick="shareResult()">
+        <span>↗</span> SHARE QUIZ
+      </button>
+      <button class="share-btn share-btn-secondary" onclick="copyLink()">
+        <span>⎘</span> COPY LINK
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>★ MUST-KNOW KOREAN MANNER QUIZ ★<br>© 2025 ALL RIGHTS RESERVED<br>PLAY · LEARN · SHARE</p>
+</footer>
+
+<!-- SHARE MODAL -->
+<div class="share-modal-overlay" id="share-modal" onclick="closeShareModal(event)">
+  <div class="share-modal">
+    <div class="share-modal-title">SHARE QUIZ</div>
+    <p class="share-modal-sub">Challenge your friends! 🇰🇷</p>
+    <div class="share-modal-btns">
+      <button class="share-social-btn twitter" onclick="shareToTwitter()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X / Twitter
+      </button>
+      <button class="share-social-btn facebook" onclick="shareToFacebook()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </button>
+      <button class="share-social-btn whatsapp" onclick="shareToWhatsApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </button>
+      <button class="share-social-btn telegram" onclick="shareToTelegram()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Telegram
+      </button>
+      <button class="share-social-btn copy-modal" onclick="copyLinkFromModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Link
+      </button>
+    </div>
+    <button class="share-modal-close" onclick="closeShareModal()">✕ CLOSE</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ LINK COPIED!</div>
+
+<script>
+const quizData = [
+  {
+    icon: '🚇',
+    en: {
+      q: 'You see empty seats in the subway...',
+      a: [
+        { id: 'q1-a', text: 'Sit in the pink seat' },
+        { id: 'q1-b', text: 'Sit in the blue seat' }
+      ],
+      correct: 1,
+      feedback: 'Pink seats are priority seats for elderly & pregnant!'
+    },
+    ms: {
+      q: 'Anda nampak tempat duduk kosong dalam tren...',
+      a: [
+        { id: 'q1-a', text: 'Duduk di kerusi merah jambu' },
+        { id: 'q1-b', text: 'Duduk di kerusi biru' }
+      ],
+      correct: 1,
+      feedback: 'Kerusi merah jambu adalah untuk warga emas & ibu mengandung!'
     }
+  },
+  {
+    icon: '🛗',
+    en: {
+      q: 'You are taking the elevator with someone...',
+      a: [
+        { id: 'q2-a', text: 'Make small talk' },
+        { id: 'q2-b', text: 'Press the close button' }
+      ],
+      correct: 1,
+      feedback: 'Koreans prefer silence in elevators. Just press close!'
+    },
+    ms: {
+      q: 'Anda menaiki lif bersama seseorang...',
+      a: [
+        { id: 'q2-a', text: 'Berbual mesra' },
+        { id: 'q2-b', text: 'Tekan butang tutup' }
+      ],
+      correct: 1,
+      feedback: 'Orang Korea lebih suka diam dalam lif. Tekan sahaja butang tutup!'
+    }
+  },
+  {
+    icon: '🏪',
+    en: {
+      q: 'You met a kind store owner...',
+      a: [
+        { id: 'q3-a', text: 'Thank them verbally and smile' },
+        { id: 'q3-b', text: 'Give tips to appreciate the service' }
+      ],
+      correct: 0,
+      feedback: 'Tipping is NOT common in Korea! A warm thank-you is perfect.'
+    },
+    ms: {
+      q: 'Anda jumpa pemilik kedai yang baik hati...',
+      a: [
+        { id: 'q3-a', text: 'Ucapkan terima kasih dan senyum' },
+        { id: 'q3-b', text: 'Beri tip sebagai penghargaan' }
+      ],
+      correct: 0,
+      feedback: 'Memberi tip TIDAK biasa di Korea! Ucapan terima kasih sudah cukup.'
+    }
+  },
+  {
+    icon: '🍽️',
+    en: {
+      q: 'You need to order at the restaurant...',
+      a: [
+        { id: 'q4-a', text: 'Make eye contact with staff' },
+        { id: 'q4-b', text: 'Use the ring bell to call service' }
+      ],
+      correct: 1,
+      feedback: 'Most Korean restaurants have a call bell on the table. Use it!'
+    },
+    ms: {
+      q: 'Anda perlu membuat pesanan di restoran...',
+      a: [
+        { id: 'q4-a', text: 'Cuba buat hubungan mata dengan pekerja' },
+        { id: 'q4-b', text: 'Guna loceng panggilan untuk panggil pelayan' }
+      ],
+      correct: 1,
+      feedback: 'Kebanyakan restoran Korea ada loceng di meja. Gunakannya!'
+    }
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let lang = 'en';
+let answered = false;
+
+const translations = {
+  en: {
+    tag: '★ 1 MIN. QUIZ ★',
+    screenTitle: 'MUST-KNOW<br>KOREAN<br>MANNER QUIZ',
+    screenSub: 'Are you ready for Korea?',
+    cta: '▶ START QUIZ',
+    pressStart: 'PRESS START →'
+  },
+  ms: {
+    tag: '★ 1 MINIT KUIZ ★',
+    screenTitle: 'KUIZ ADAB<br>KOREA YANG<br>MESTI TAHU',
+    screenSub: 'Bersedia untuk Korea?',
+    cta: '▶ MULA KUIZ',
+    pressStart: 'TEKAN MULA →'
+  }
+};
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-toggle button:${l === 'en' ? 'first' : 'last'}-child`).classList.add('active');
+  const t = translations[l];
+  document.getElementById('screen-tag').textContent = t.tag;
+  document.getElementById('screen-title').innerHTML = t.screenTitle;
+  document.getElementById('screen-sub').textContent = t.screenSub;
+  document.getElementById('main-cta').textContent = t.cta;
+  document.getElementById('screen-blink').textContent = t.pressStart;
+  if (currentQ > 0 && currentQ < quizData.length) renderQuestion();
 }
-        const quizData = [
-            { 
-                icon: "✍️", video: "1. VIDEO_INK.mp4", 
-                introText: "I just checked into my hotel, and they handed me one of those multi-color pens to sign some papers. Now I’m wondering... which color should I even use?", 
-                a: "Use red ink.", b: "Use black ink.", 
-                imgA: "1. CHOICE1_INK.jpg", 
-                imgB: "1. CHOICE2_INK.jpg",
-                answer: "B", 
-                successImg: "1. SUCCESS_INK.png", 
-                failImg: "1. FAIL_INK.png",
-                feedback: "Never write names in red. It’s an ancient taboo linked to death. Use black or blue ink!" 
-            },
-            { 
-                icon: "🥢", video: "2. VIDEO_UTENSIL.mp4", 
-                introText: "I go to a restaurant for a meal. All the food has been served, but there are no utensils. How should I get them?", 
-                a: "Call the staff loudly and ask them to bring some.", b: "Open the drawer under the table and take them out.", 
-                imgA: "2. CHOICE1_UTENSIL.jpg", 
-                imgB: "2. CHOICE2_UTENSIL.jpg",
-                answer: "B", 
-                successImg: "2. SUCCESS_UTENSIL.jpg", 
-                failImg: "2. FAIL_UTENSIL.jpg",
-                feedback: "In Korea, it is almost an unspoken rule to set out the utensils and water as soon as everyone sits down. Be careful, or you might come across as clueless!" 
-            },
-            { 
-                icon: "🏃", video: "3. VIDEO_ESCALATOR.mp4", 
-                introText: "Where should I stand when taking an escalator?", 
-                a: "Line up on the left.", b: "Line up on the right.", 
-                imgA: "3. CHOICE1_ESCALATOR.png", 
-                imgB: "3. CHOICE2_ESCALATOR.png",
-                answer: "B", 
-                successImg: "3. SUCCESS_ESCALATOR.png", 
-                failImg: "3. FAIL_ESCALATOR.png",
-                feedback: "People stand on the right side to ride up slowly, keeping the left side clear for those who are in a hurry and want to walk up." 
-            },
-            { 
-                icon: "💸", video: "4. VIDEO_TIP.mp4", 
-                introText: "I enjoyed delicious food and friendly service at a restaurant. What should I do?", 
-                a: "Express my gratitude verbally.", b: "Leave a tip.", 
-                imgA: "4. CHOICE1_TIP.jpg", 
-                imgB: "4. CHOICE2_TIP.jpg",
-                answer: "A", 
-                successImg: "4. SUCCESS_TIP.png", 
-                failImg: "4. FAIL_TIP.png",
-                feedback: "There is no tipping culture in Korea. Simply saying 'Thank you' is perfectly enough." 
-            },
-            { 
-                icon: "🙇", video: "5. VIDEO_BOW.mp4", 
-                introText: "I walk into a local shop or a restaurant, and the owner welcomes me. How should I greet them in return?", 
-                a: "Wave my hand and say 'Hi!'.", b: "Give a bow with my head and upper body.", 
-                imgA: "5. CHOICE1_BOW.jpg", 
-                imgB: "5. CHOICE2_BOW.jpg",
-                answer: "B", 
-                successImg: "5. SUCCESS_BOW.png", 
-                failImg: "5. FAIL_BOW.png",
-                feedback: "In Korea, giving a 'slight bow' is the most natural and polite way to greet store owners, staff, or elders you don't know well." 
-            }
-        ];
 
-        let currentIdx = 0, lives = 3, score = 0, finalRank = "K-Newbie";
-        let isIntroState = false;
-        
-        const qVideo = document.getElementById('quiz-video');
-        const qPlaceholder = document.getElementById('quiz-placeholder');
-        const qIcon = document.getElementById('quiz-icon');
-        const dialogue = document.getElementById('dialogue-text');
-        const choiceArea = document.getElementById('choice-area');
-        const feedbackBg = document.getElementById('feedback-bg-img');
-        const feedbackPlaceholder = document.getElementById('feedback-placeholder');
-        const feedbackTitle = document.getElementById('feedback-title');
-        const quizTapGuide = document.getElementById('quiz-tap-guide');
+function startQuiz() {
+  currentQ = 0; score = 0; answered = false;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  updateHP();
+  renderQuestion();
+}
 
-        function startGame() {
-            currentIdx = 0; lives = 3; score = 0;
-            showScreen('gameplay-screen');
-            loadQuestion();
-        }
+function renderQuestion() {
+  const q = quizData[currentQ];
+  const d = q[lang];
+  answered = false;
 
-        function loadQuestion() {
-            const data = quizData[currentIdx];
-            updateLives();
-            isIntroState = true;
-            
-            choiceArea.style.display = 'none';
-            feedbackBg.style.display = 'none';
-            feedbackPlaceholder.style.display = 'none';
-            quizTapGuide.style.display = 'block';
-            
-            if (data.video) {
-                qVideo.src = data.video;
-                qVideo.style.display = 'block';
-                qVideo.load();
-                qVideo.play().catch(e => {
-                    qVideo.style.display = 'none';
-                    qPlaceholder.style.display = 'flex';
-                    qIcon.innerText = data.icon;
-                });
-            } else {
-                qVideo.style.display = 'none';
-                qPlaceholder.style.display = 'flex';
-                qIcon.innerText = data.icon;
-            }
+  document.getElementById('prog-label').textContent = `${currentQ+1}/4`;
+  document.getElementById('prog-fill').style.width = `${((currentQ+1)/4)*100}%`;
+  document.getElementById('q-count').textContent = `Q ${currentQ+1}/4`;
+  document.getElementById('sit-icon').textContent = q.icon;
+  document.getElementById('q-text').textContent = d.q;
 
-            dialogue.innerText = data.introText;
-        }
+  const choices = document.getElementById('choices');
+  choices.innerHTML = '';
+  d.a.forEach((ans, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.id = ans.id;
+    btn.textContent = `${i === 0 ? 'A' : 'B'}. ${ans.text}`;
+    btn.onclick = () => selectAnswer(i, d.correct, d.feedback, d.a);
+    choices.appendChild(btn);
+  });
+}
 
-        function handleGameplayTap() {
-            if (isIntroState) {
-                showChoices();
-            }
-        }
+function selectAnswer(chosen, correct, feedback, choices) {
+  if (answered) return;
+  answered = true;
 
-        function showChoices() {
-            isIntroState = false;
-            const data = quizData[currentIdx];
-            
-            document.getElementById('text-a').innerText = data.a;
-            document.getElementById('text-b').innerText = data.b;
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach((b, i) => {
+    if (i === correct) b.classList.add('correct');
+    else if (i === chosen) b.classList.add('wrong');
+    b.style.pointerEvents = 'none';
+  });
 
-            const imgA = document.getElementById('img-a');
-            const imgB = document.getElementById('img-b');
-            const placeholders = document.querySelectorAll('.img-error-placeholder');
-            
-            placeholders.forEach(p => p.style.display = 'none');
-            imgA.style.display = 'block';
-            imgB.style.display = 'block';
+  const isCorrect = chosen === correct;
+  if (isCorrect) {
+    score++;
+    showLevelUp();
+    updateHP();
+  }
 
-            if (data.imgA) {
-                imgA.src = data.imgA;
-            } else {
-                imgA.style.display = 'none';
-                imgA.parentElement.querySelector('.img-error-placeholder').style.display = 'flex';
-            }
+  const overlay = document.getElementById('feedback-overlay');
+  document.getElementById('feedback-emoji').textContent = isCorrect ? '✓' : '✗';
+  document.getElementById('feedback-emoji').style.color = isCorrect ? '#00aa66' : '#cc3333';
+  document.getElementById('feedback-text').textContent = feedback;
+  overlay.style.display = 'flex';
 
-            if (data.imgB) {
-                imgB.src = data.imgB;
-            } else {
-                imgB.style.display = 'none';
-                imgB.parentElement.querySelector('.img-error-placeholder').style.display = 'flex';
-            }
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    currentQ++;
+    if (currentQ < quizData.length) renderQuestion();
+    else showResult();
+  }, 2000);
+}
 
-            choiceArea.style.display = 'flex';
-            quizTapGuide.style.display = 'none';
-            dialogue.innerText = "Select your action:";
-        }
+function updateHP() {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById(`hp${i}`).className = `hp-pip${i <= score ? '' : ' empty'}`;
+  }
+}
 
-        function checkAnswer(choice) {
-            const data = quizData[currentIdx];
-            const isCorrect = choice === data.answer;
-            const desc = document.getElementById('feedback-desc');
-            
-            showScreen('feedback-screen');
-            
-            const showFeedbackImage = (imgSrc) => {
-                if (imgSrc) {
-                    feedbackBg.src = imgSrc;
-                    feedbackBg.style.display = 'block';
-                    feedbackPlaceholder.style.display = 'none';
-                    feedbackBg.onerror = () => {
-                        feedbackBg.style.display = 'none';
-                        feedbackPlaceholder.style.display = 'none';
-                    };
-                } else {
-                    feedbackBg.style.display = 'none';
-                    feedbackPlaceholder.style.display = 'none';
-                }
-            };
+function showLevelUp() {
+  const el = document.getElementById('levelup');
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 800);
+}
 
-            if (isCorrect) {
-                score++;
-                feedbackTitle.innerText = "SUCCESS";
-                feedbackTitle.style.color = "var(--success-green)";
-                showFeedbackImage(data.successImg);
-            } else {
-                lives--;
-                feedbackTitle.innerText = "FAILED";
-                feedbackTitle.style.color = "var(--point-red)";
-                showFeedbackImage(data.failImg);
-            }
-            
-            desc.innerText = data.feedback;
-            updateLives();
-        }
+function showResult() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('q-count').textContent = `DONE!`;
 
-        function toNext() {
-            if (lives <= 0) {
-                showScreen('game-over-screen');
-                trackConversion('gameover');
-                return;
-            }
-            
-            currentIdx++;
-            if (currentIdx < quizData.length) {
-                showScreen('gameplay-screen');
-                loadQuestion();
-            } else {
-                showFinalResult();
-            }
-        }
+  const grades = [
+    { label: 'RETRY?', msg: 'Time to study Korean manners! 😅', color: '#ffcccc' },
+    { label: 'TRY HARDER', msg: 'You know a little! Keep learning 🌱', color: '#ffe0cc' },
+    { label: 'GOOD!', msg: 'Not bad! Korea is almost ready for you 🎌', color: '#ffffcc' },
+    { label: 'GREAT!', msg: 'Impressive! You\'ll fit right in 🎉', color: '#C0FFFF' },
+    { label: 'BEST!', msg: 'You\'re a Korean manner master! 👑', color: '#E1FF46' }
+  ];
 
-        function showFinalResult() {
-            showScreen('result-screen');
-            trackConversion('result');
-            const resultDesc = document.getElementById('result-desc');
-            const resultBadge = document.getElementById('result-badge');
-            
-            let rank = "K-Newbie", msg = "You're getting there! Keep learning the local ways.", badgeSrc = "7. BADGE_FAIL_BGREMOVED.png";
-            
-            if (score === 5) { 
-                rank = "Honorary Korean"; 
-                msg = "Perfect! You are officially an Honorary Korean. You know the rules better than locals!"; 
-                badgeSrc = "7. BADGE_SUCCESS_BGREMOVED.png"; 
-            } else if (score === 4) { 
-                rank = "Korean at Heart"; 
-                msg = "Amazing! You truly have the soul of a Korean. Your understanding is top-tier!"; 
-                badgeSrc = "7. BADGE_FAIL_BGREMOVED.png"; 
-            } else if (score === 3) { 
-                rank = "Pro Vibe Reader"; 
-                msg = "Impressive! Your 'Nunchi' (vibe reading) is on another level. You'll do great!"; 
-                badgeSrc = "7. BADGE_FAIL_BGREMOVED.png"; 
-            } else if (score >= 2) {
-                rank = "K-Explorer";
-                msg = "Great Job! You have a solid grasp of Korean culture. Enjoy your trip!";
-                badgeSrc = "7. BADGE_FAIL_BGREMOVED.png";
-            } else {
-                badgeSrc = "7. BADGE_FAIL_BGREMOVED.png";
-            }
-            
-            finalRank = rank; 
-            
-            if (badgeSrc) {
-                resultBadge.src = badgeSrc;
-                resultBadge.style.display = 'block';
-                resultBadge.onerror = () => { resultBadge.style.display = 'none'; }; 
-            } else {
-                resultBadge.style.display = 'none';
-            }
+  const g = grades[score];
+  document.getElementById('result-score').textContent = `${score}/4`;
+  document.getElementById('result-grade').textContent = g.label;
+  document.getElementById('result-msg').textContent = g.msg;
 
-            resultDesc.innerText = msg;
-        }
+  const badge = document.getElementById('result-badge');
+  badge.querySelector('rect:first-child').setAttribute('fill', g.color);
+  badge.querySelector('text').textContent = score === 4 ? '★' : score >= 2 ? '◆' : '?';
+}
 
-        function updateLives() {
-            const bar = document.getElementById('lives-display');
-            bar.innerHTML = '';
-            for(let i=0; i<3; i++) {
-                const s = document.createElement('span');
-                s.innerText = i < lives ? '❤️' : '🖤';
-                s.className = i < lives ? 'text-xl' : 'text-xl grayscale opacity-50';
-                bar.appendChild(s);
-            }
-        }
+function restartQuiz() { startQuiz(); }
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById(id).classList.add('active-screen');
-        }
+const SHARE_URL = window.location.href;
+const SHARE_TEXT = '🇰🇷 Can you pass the Must-Know Korean Manner Quiz? Test yourself before your trip to Korea!';
 
-        const SHARE_URL = "https://tmr-2.vercel.app/";
+function openShareModal() {
+  document.getElementById('share-modal').classList.add('open');
+}
 
-        function copyGameLink(btn) {
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = `I scored ${score}/5 on K-EARTH Survival Guide! 🇰🇷🎮 Can you beat my K-IQ? \n${SHARE_URL}`;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-            
-            const toast = document.getElementById('toast');
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 2000);
-            
-            const originalText = btn.innerText;
-            btn.innerText = "Copied! ✅";
-            setTimeout(() => { btn.innerText = originalText; }, 2000);
-        }
+function closeShareModal(e) {
+  if (!e || e.target === document.getElementById('share-modal')) {
+    document.getElementById('share-modal').classList.remove('open');
+  }
+}
 
-        async function shareToSocial() {
-            const text = `I got Rank "${finalRank}" on the K-EARTH Survival Guide! 🇰🇷🎮 Score: ${score}/5. Can you survive in Korea?`;
-            
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'K-EARTH Survival Guide',
-                        text: text,
-                        url: SHARE_URL,
-                    });
-                } catch (err) { }
-            } else {
-                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(SHARE_URL)}`, '_blank');
-            }
-        }
+function shareToTwitter() {
+  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(SHARE_URL)}`;
+  window.open(url, '_blank', 'noopener,width=600,height=400');
+}
 
-        window.onload = () => updateLives();
-    </script>
+function shareToFacebook() {
+  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}`;
+  window.open(url, '_blank', 'noopener,width=600,height=400');
+}
+
+function shareToWhatsApp() {
+  const url = `https://wa.me/?text=${encodeURIComponent(SHARE_TEXT + ' ' + SHARE_URL)}`;
+  window.open(url, '_blank', 'noopener');
+}
+
+function shareToTelegram() {
+  const url = `https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SHARE_TEXT)}`;
+  window.open(url, '_blank', 'noopener');
+}
+
+function copyLinkFromModal() {
+  navigator.clipboard.writeText(SHARE_URL).then(() => {
+    closeShareModal();
+    showToast('✓ LINK COPIED!');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = SHARE_URL;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    closeShareModal();
+    showToast('✓ LINK COPIED!');
+  });
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(SHARE_URL).then(() => {
+    showToast('✓ LINK COPIED!');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = SHARE_URL;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('✓ LINK COPIED!');
+  });
+}
+
+function shareResult() { openShareModal(); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// PIXEL STARS
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.className = 'pstar';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    s.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    s.style.background = Math.random() > 0.5 ? '#FF8EC6' : '#E1FF46';
+    container.appendChild(s);
+  }
+}
+createStars();
+
+// SCROLL EFFECTS
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// SMOOTH SCROLL
+function smoothScroll(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - 64;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+// NAV ACTIVE
+const sections = document.querySelectorAll('section[id]');
+const navBtns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) cur = s.id;
+  });
+  navBtns.forEach(b => {
+    const targets = { 'Quiz': 'quiz', 'About Quiz': 'about', 'Share': 'share' };
+    b.classList.toggle('active', targets[b.textContent] === cur);
+  });
+});
+</script>
 </body>
 </html>
