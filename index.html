@@ -325,8 +325,8 @@
 
   /* 플로팅 로고 */
   .start-logo-float {
-    width: 85%;
-    max-width: 320px;
+    width: 51%;
+    max-width: 192px;
     object-fit: contain;
     animation: float 2.4s ease-in-out infinite;
     filter: drop-shadow(0 8px 18px rgba(0,0,0,0.5));
@@ -828,17 +828,32 @@
     background: #FE52A2;
     color: #fff;
     border: 3px solid var(--dark);
-    box-shadow: 4px 4px 0 var(--dark), 0 0 16px rgba(254,82,162,0.7), 0 0 32px rgba(254,82,162,0.4);
     padding: 14px 36px;
     cursor: pointer;
     letter-spacing: 1px;
-    transition: background 0.1s, box-shadow 0.1s;
+    transition: background 0.1s;
     display: inline-block;
     position: relative;
     overflow: hidden;
     border-radius: 999px;
     margin-top: 4px;
-    animation: btnFloat 2s ease-in-out infinite;
+    animation: btnFloat 2s ease-in-out infinite, btnGlow 1.8s ease-in-out infinite;
+  }
+
+  @keyframes btnGlow {
+    0%, 100% {
+      box-shadow: 4px 4px 0 var(--dark),
+                  0 0 10px rgba(254,82,162,0.8),
+                  0 0 24px rgba(254,82,162,0.6),
+                  0 0 48px rgba(254,82,162,0.3);
+    }
+    50% {
+      box-shadow: 4px 4px 0 var(--dark),
+                  0 0 20px rgba(254,82,162,1),
+                  0 0 48px rgba(254,82,162,0.8),
+                  0 0 80px rgba(254,82,162,0.5),
+                  0 0 120px rgba(254,82,162,0.2);
+    }
   }
 
   .screen-cta-btn::before {
@@ -861,13 +876,17 @@
     background: #ff6db3;
     animation-play-state: paused;
     transform: translateY(-3px);
-    box-shadow: 6px 7px 0 var(--dark), 0 0 24px rgba(254,82,162,0.9), 0 0 48px rgba(254,82,162,0.5);
+    box-shadow: 6px 7px 0 var(--dark),
+                0 0 28px rgba(254,82,162,1),
+                0 0 56px rgba(254,82,162,0.8),
+                0 0 100px rgba(254,82,162,0.5);
   }
 
   .screen-cta-btn:active {
     transform: translateY(1px);
-    box-shadow: 2px 2px 0 var(--dark);
     animation-play-state: paused;
+    box-shadow: 2px 2px 0 var(--dark),
+                0 0 12px rgba(254,82,162,0.8);
   }
 
   .screen-tag {
@@ -2023,57 +2042,103 @@ window.addEventListener('load', () => {
   }
 });
 
-// ETIQUETTE SLIDER — drag (mobile & desktop) + wheel (PC) + infinite loop
+// ETIQUETTE SLIDER — momentum drag + smooth deceleration + infinite loop
 (function() {
   const wrap = document.getElementById('etiquette-slider');
   if (!wrap) return;
-  const parent = wrap.parentElement;
-  let isDragging = false, startX = 0, scrollLeft = 0;
+  const el = wrap.parentElement;
 
-  parent.addEventListener('mousedown', e => {
+  let isDragging = false;
+  let startX = 0, startScroll = 0;
+  let lastX = 0, lastTime = 0;
+  let velocity = 0;
+  let rafId = null;
+
+  function cancelMomentum() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  }
+
+  function applyMomentum() {
+    velocity *= 0.92; // 감속 계수 — 클수록 더 오래 미끄러짐
+    if (Math.abs(velocity) < 0.4) { velocity = 0; return; }
+    el.scrollLeft -= velocity;
+    loopCheck();
+    rafId = requestAnimationFrame(applyMomentum);
+  }
+
+  function loopCheck() {
+    const len = el._loopLen;
+    if (!len) return;
+    if (el.scrollLeft <= 0) el.scrollLeft += len;
+    else if (el.scrollLeft >= len * 2) el.scrollLeft -= len;
+  }
+
+  // MOUSE
+  el.addEventListener('mousedown', e => {
+    cancelMomentum();
     isDragging = true;
-    startX = e.pageX - parent.offsetLeft;
-    scrollLeft = parent.scrollLeft;
-    parent.style.cursor = 'grabbing';
+    startX = e.pageX;
+    startScroll = el.scrollLeft;
+    lastX = e.pageX;
+    lastTime = Date.now();
+    el.style.cursor = 'grabbing';
   });
+
   document.addEventListener('mouseup', () => {
+    if (!isDragging) return;
     isDragging = false;
-    parent.style.cursor = 'grab';
+    el.style.cursor = 'grab';
+    rafId = requestAnimationFrame(applyMomentum);
   });
-  parent.addEventListener('mousemove', e => {
+
+  el.addEventListener('mousemove', e => {
     if (!isDragging) return;
     e.preventDefault();
-    const x = e.pageX - parent.offsetLeft;
-    parent.scrollLeft = scrollLeft - (x - startX);
+    const dx = e.pageX - startX;
+    el.scrollLeft = startScroll - dx;
+    // velocity 계산
+    const now = Date.now();
+    const dt = now - lastTime || 1;
+    velocity = (lastX - e.pageX) / dt * 12;
+    lastX = e.pageX;
+    lastTime = now;
+    loopCheck();
   });
 
-  parent.addEventListener('touchstart', e => {
+  // TOUCH
+  el.addEventListener('touchstart', e => {
+    cancelMomentum();
     startX = e.touches[0].pageX;
-    scrollLeft = parent.scrollLeft;
-  }, { passive: true });
-  parent.addEventListener('touchmove', e => {
-    const x = e.touches[0].pageX;
-    parent.scrollLeft = scrollLeft - (x - startX);
+    startScroll = el.scrollLeft;
+    lastX = startX;
+    lastTime = Date.now();
   }, { passive: true });
 
-  parent.addEventListener('wheel', e => {
+  el.addEventListener('touchmove', e => {
+    const x = e.touches[0].pageX;
+    el.scrollLeft = startScroll - (x - startX);
+    const now = Date.now();
+    const dt = now - lastTime || 1;
+    velocity = (lastX - x) / dt * 12;
+    lastX = x;
+    lastTime = now;
+    loopCheck();
+  }, { passive: true });
+
+  el.addEventListener('touchend', () => {
+    rafId = requestAnimationFrame(applyMomentum);
+  });
+
+  // WHEEL
+  el.addEventListener('wheel', e => {
     e.preventDefault();
-    parent.scrollLeft += e.deltaY * 1.5;
+    cancelMomentum();
+    el.scrollLeft += e.deltaY * 1.5;
+    loopCheck();
   }, { passive: false });
 
-  // infinite loop: jump when reaching edge set
-  parent.addEventListener('scroll', () => {
-    const len = parent._loopLen;
-    if (!len) return;
-    if (parent.scrollLeft <= 0) {
-      parent.scrollLeft += len;
-    } else if (parent.scrollLeft >= len * 2) {
-      parent.scrollLeft -= len;
-    }
-  });
-
-  parent.style.overflowX = 'auto';
-  parent.style.scrollBehavior = 'auto';
+  el.style.overflowX = 'hidden';
+  el.style.scrollBehavior = 'auto';
   wrap.style.transition = 'none';
 })();
 
