@@ -319,8 +319,22 @@
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    padding: 20px 16px 28px;
-    background: linear-gradient(to bottom, rgba(10,10,20,0.88) 50%, transparent 100%);
+    padding: 16px 16px 28px;
+    background: linear-gradient(to bottom, rgba(10,10,20,0.7) 40%, transparent 100%);
+  }
+
+  /* 플로팅 로고 */
+  .start-logo-float {
+    width: 85%;
+    max-width: 320px;
+    object-fit: contain;
+    animation: float 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.5));
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
   }
 
   /* 하단 버튼 오버레이 */
@@ -814,11 +828,11 @@
     background: #FE52A2;
     color: #fff;
     border: 3px solid var(--dark);
-    box-shadow: 4px 4px 0 var(--dark);
+    box-shadow: 4px 4px 0 var(--dark), 0 0 16px rgba(254,82,162,0.7), 0 0 32px rgba(254,82,162,0.4);
     padding: 14px 36px;
     cursor: pointer;
     letter-spacing: 1px;
-    transition: background 0.1s;
+    transition: background 0.1s, box-shadow 0.1s;
     display: inline-block;
     position: relative;
     overflow: hidden;
@@ -847,7 +861,7 @@
     background: #ff6db3;
     animation-play-state: paused;
     transform: translateY(-3px);
-    box-shadow: 6px 7px 0 var(--dark);
+    box-shadow: 6px 7px 0 var(--dark), 0 0 24px rgba(254,82,162,0.9), 0 0 48px rgba(254,82,162,0.5);
   }
 
   .screen-cta-btn:active {
@@ -908,97 +922,89 @@
     line-height: 1.6;
   }
 
-  .about-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
+  .section-drag-hint {
+    font-family: 'Silkscreen', monospace;
+    font-size: 9px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    margin-top: 12px;
+    opacity: 0.7;
   }
 
-  .about-card {
+  .etiquette-slider-wrap:active { cursor: grabbing; }
+
+  .etiquette-slider {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    transition: transform 0.05s linear;
+  }
+
+  .etiquette-card {
+    width: 280px;
+    min-height: 360px;
     background: var(--bg);
     border: 4px solid var(--yellow);
-    box-shadow: 8px 8px 0 var(--yellow);
-    padding: 2rem;
-    position: relative;
+    box-shadow: 6px 6px 0 var(--yellow);
+    padding: 24px 20px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .about-card:hover {
-    transform: translate(-4px, -4px);
-    box-shadow: 12px 12px 0 var(--yellow);
-  }
-
-  .about-card:nth-child(2) {
+  .etiquette-card:nth-child(2n) {
     border-color: var(--cyan);
-    box-shadow: 8px 8px 0 var(--cyan);
+    box-shadow: 6px 6px 0 var(--cyan);
   }
 
-  .about-card:nth-child(2):hover {
-    box-shadow: 12px 12px 0 var(--cyan);
-  }
-
-  .about-card:nth-child(3) {
+  .etiquette-card:nth-child(3n) {
     border-color: var(--pink);
-    box-shadow: 8px 8px 0 var(--pink);
+    box-shadow: 6px 6px 0 var(--pink);
   }
 
-  .about-card:nth-child(3):hover {
-    box-shadow: 12px 12px 0 var(--pink);
+  .etiquette-card:hover {
+    transform: translateY(-4px);
   }
 
-  .card-num {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 36px;
-    color: var(--yellow);
-    display: block;
-    margin-bottom: 16px;
-    text-shadow: 3px 3px 0 var(--dark);
-    opacity: 0.3;
-    line-height: 1;
-  }
-
-  .about-card:nth-child(2) .card-num { color: var(--cyan); }
-  .about-card:nth-child(3) .card-num { color: var(--pink); }
-
-  .card-icon-pixel {
-    font-size: 32px;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .card-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
+  .etiquette-card-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 28px;
     color: var(--dark);
-    line-height: 1.8;
-    margin-bottom: 12px;
+    line-height: 1.4;
+    border-bottom: 3px solid currentColor;
+    padding-bottom: 12px;
   }
 
-  .card-desc {
+  .etiquette-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .etiquette-list li {
     font-family: 'Handjet', sans-serif;
     font-size: 15px;
-    font-weight: 500;
-    color: #444;
+    color: #000;
     line-height: 1.7;
+    padding-left: 0;
   }
 
-  .card-badge {
-    display: inline-block;
-    margin-top: 16px;
-    font-family: 'Silkscreen', monospace;
-    font-size: 8px;
-    padding: 6px 12px;
-    border: 2px solid var(--dark);
-    letter-spacing: 1px;
+  /* 스크롤바 숨기기 */
+  .etiquette-slider-wrap {
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    padding: 0 2rem 2rem;
+    position: relative;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-
-  .about-card:nth-child(1) .card-badge { background: var(--yellow); }
-  .about-card:nth-child(2) .card-badge { background: var(--cyan); }
-  .about-card:nth-child(3) .card-badge { background: var(--pink); }
+  .etiquette-slider-wrap::-webkit-scrollbar { display: none; }
 
   /* ============ SHARE SECTION ============ */
   .share-section {
@@ -1356,7 +1362,7 @@
   </div>
   <nav>
     <button class="nav-btn active" onclick="smoothScroll('quiz')">Quiz</button>
-    <button class="nav-btn" onclick="smoothScroll('about')">About Quiz</button>
+    <button class="nav-btn" onclick="smoothScroll('about')">Learn more</button>
     <button class="nav-btn" onclick="smoothScroll('share')">Share</button>
   </nav>
 </header>
@@ -1396,10 +1402,10 @@
               <div class="start-screen" id="start-screen">
                 <!-- 배경 이미지 -->
                 <div class="start-bg"></div>
-                <!-- 상단 텍스트 오버레이 -->
+                <!-- 상단: 로고 플로팅 -->
                 <div class="start-header-overlay">
-                  <div class="start-title" id="screen-title">MUST-KNOW<br>KOREAN MANNER QUIZ</div>
-                  <div class="start-sub" id="screen-sub">Are you ready for Korea?</div>
+                  <img src="Logo_Quiz.png" class="start-logo-float" alt="Must-Know Korean Manner Quiz">
+                  <div class="start-sub" id="screen-sub">30 Seconds Quiz &amp; Get More Tips</div>
                 </div>
                 <!-- 하단 버튼 오버레이 -->
                 <div class="start-overlay">
@@ -1448,34 +1454,15 @@
   </div>
 </section>
 
-<!-- SECTION 2: ABOUT -->
+<!-- SECTION 2: LEARN MORE -->
 <section id="about" class="about-section">
   <div class="section-header reveal">
-    <span class="section-num">— SECTION 02 —</span>
-    <h2 class="section-title">ABOUT<br>THE QUIZ</h2>
+    <span class="section-num" style="display:none">— SECTION 02 —</span>
+    <h2 class="section-title">LEARN MORE</h2>
+    <p class="section-drag-hint">← drag to explore →</p>
   </div>
-  <div class="about-cards">
-    <div class="about-card reveal">
-      <span class="card-num">01</span>
-      <span class="card-icon-pixel">🗺️</span>
-      <div class="card-title">LEARN BEFORE<br>YOU LAND</div>
-      <p class="card-desc">Master basic Korean etiquette before your trip. Short, sharp lessons from real situations travelers face every day.</p>
-      <span class="card-badge">★ TRAVEL PREP</span>
-    </div>
-    <div class="about-card reveal">
-      <span class="card-num">02</span>
-      <span class="card-icon-pixel">🚇</span>
-      <div class="card-title">PLAY THROUGH<br>REAL SITUATIONS</div>
-      <p class="card-desc">Airports, subways, restaurants, cafes — experience actual Korea travel moments in game form. No boring lectures.</p>
-      <span class="card-badge">★ REAL SCENARIOS</span>
-    </div>
-    <div class="about-card reveal">
-      <span class="card-num">03</span>
-      <span class="card-icon-pixel">🏆</span>
-      <div class="card-title">GET YOUR<br>TRAVEL BADGE</div>
-      <p class="card-desc">Earn a unique traveler grade based on your score. Share your badge and challenge friends to beat your result!</p>
-      <span class="card-badge">★ SHARE & FLEX</span>
-    </div>
+  <div class="etiquette-slider-wrap">
+    <div class="etiquette-slider" id="etiquette-slider"></div>
   </div>
 </section>
 
@@ -1538,6 +1525,104 @@
 <div class="toast" id="toast">✓ LINK COPIED!</div>
 
 <script>
+// ETIQUETTE DATA
+const etiquetteData = {
+  en: [
+    { title: '🚇 Subway Etiquette', items: [
+      '🤰 The pink seats are designated for pregnant women — keep them available at all times.',
+      '🎒 When the train is crowded, wear your backpack on your front.',
+      '👥 Stand in two lines in front of the doors — let people get off before boarding.'
+    ]},
+    { title: '🪜 Escalator Etiquette', items: [
+      '🚶 Stand on the right side, and leave the left side open for people who are walking up or down.',
+      '🧳 Place your carrier luggage one step above you and keep a firm hold on it at all times.'
+    ]},
+    { title: '🍽️ Dining Out', items: [
+      '🔔 If there is a call button on the table, press it to call the staff.',
+      '🍴 If your food arrives but there are no utensils, check the drawer hidden underneath the side of the table.',
+      '💧 Water is free. If they don\'t bring it, it means it\'s a self-service system.',
+      '🥗 If there is a service table (side-dish bar), side dishes are self-service — take as much as you can eat.',
+      '☕ Most Korean restaurants do not sell coffee — Korea has a separate café culture.',
+      '🍟 You are expected to clean up your own tray and trash after finishing your meal.'
+    ]},
+    { title: '🙇 Manners & Respect', items: [
+      '🙇‍♂️ Bow from the waist when greeting elders.',
+      '🤲 Always use both hands when giving or receiving items from elders.',
+      '🍽️ Wait for the elders to start eating before you begin your meal.'
+    ]},
+    { title: '⏱️ Daily Life & General Rules', items: [
+      '⏰ Being late is considered rude — try to arrive 5 minutes before the appointment time.',
+      '✋ There\'s no stigma around using your left hand in Korea.',
+      '🧾 You can get a refund within 7 days if you bring your receipt (some exceptions apply).',
+      '🎺 Honking is more common than in Malaysia, so don\'t be surprised!'
+    ]},
+    { title: '🤝 Socializing & Small Talk', items: [
+      '👥 If you\'re attending with acquaintances, ask for permission in advance.',
+      '🤫 Respect personal privacy — avoid sensitive questions (e.g., company name, housing, or children).',
+      '💬 To break the ice, it\'s fine to ask about their age, MBTI, or name.',
+      '📸 People are highly sensitive about portrait rights — make sure others don\'t appear in your photos.'
+    ]}
+  ],
+  ms: [
+    { title: '🚇 Etika Subway', items: [
+      '🤰 Tempat duduk berwarna merah jambu dikhaskan untuk wanita hamil — biarkan ia sentiasa kosong.',
+      '🎒 Apabila sesak, pakai beg galas di hadapan dada.',
+      '👥 Beratur dalam dua barisan di hadapan pintu — biarkan penumpang keluar dahulu sebelum masuk.'
+    ]},
+    { title: '🪜 Etika Eskalator', items: [
+      '🚶 Berdiri di sebelah kanan, dan biarkan sebelah kiri untuk orang yang berjalan.',
+      '🧳 Letakkan bagasi atau troli satu anak tangga di hadapan anda dan pegang dengan kemas.'
+    ]},
+    { title: '🍽️ Makan di Luar', items: [
+      '🍟 Sila kemas dulang dan buang sampah sendiri selepas makan.',
+      '🔔 Jika terdapat butang panggilan di meja, tekan untuk memanggil staf.',
+      '🍴 Jika makanan sampai tanpa sudu atau penyepit, periksa laci di bawah meja.',
+      '💧 Air adalah percuma. Jika tidak dihidangkan, ia adalah sistem layan diri — ambil sendiri.',
+      '🥗 Jika ada kaunter lauk sampingan, ia adalah layan diri — ambil sekadar yang anda boleh habiskan.',
+      '☕ Kebanyakan restoran Korea tidak menjual kopi kerana budaya kafe sangat berkembang.'
+    ]},
+    { title: '🙇 Adab & Hormat', items: [
+      '🙇‍♂️ Tunduk sedikit ketika memberi salam kepada orang yang lebih tua.',
+      '🤲 Gunakan kedua-dua tangan apabila memberi atau menerima sesuatu daripada orang yang lebih tua.',
+      '🍽️ Tunggu orang yang lebih tua mula makan dahulu sebelum anda makan.'
+    ]},
+    { title: '⏱️ Kehidupan Harian & Peraturan Umum', items: [
+      '⏰ Datang lewat dianggap tidak sopan — cuba tiba 5 minit lebih awal.',
+      '✋ Tiada stigma terhadap penggunaan tangan kiri di Korea.',
+      '🧾 Anda boleh mendapatkan pemulangan dalam masa 7 hari dengan resit (tertakluk kepada pengecualian).',
+      '🎺 Penggunaan hon lebih biasa berbanding di Malaysia — jangan terkejut.'
+    ]},
+    { title: '🤝 Bersosial & Perbualan Ringan', items: [
+      '👥 Jika ingin membawa kenalan ke sesuatu acara, minta kebenaran terlebih dahulu.',
+      '🤫 Hormati privasi peribadi — elakkan soalan sensitif (nama syarikat, tempat tinggal, atau anak).',
+      '💬 Untuk memulakan perbualan, anda boleh bertanya umur, MBTI, atau nama.',
+      '📸 Ramai orang sensitif tentang hak imej — pastikan orang lain tidak termasuk dalam gambar anda.'
+    ]}
+  ]
+};
+
+function renderEtiquetteCards(l) {
+  const slider = document.getElementById('etiquette-slider');
+  if (!slider) return;
+  const cards = etiquetteData[l] || etiquetteData.en;
+  const colors = ['var(--yellow)', 'var(--cyan)', 'var(--pink)'];
+  const makeCards = () => cards.map((card, i) => `
+    <div class="etiquette-card" style="border-color:${colors[i%3]};box-shadow:6px 6px 0 ${colors[i%3]}">
+      <div class="etiquette-card-title">${card.title}</div>
+      <ul class="etiquette-list">${card.items.map(it => `<li>${it}</li>`).join('')}</ul>
+    </div>`).join('');
+  // 3벌 복사해서 무한 루프처럼 보이게
+  slider.innerHTML = makeCards() + makeCards() + makeCards();
+  // 중간 세트로 초기 위치 설정
+  const parent = slider.parentElement;
+  requestAnimationFrame(() => {
+    const cardW = 280 + 20; // card width + gap
+    parent.scrollLeft = cardW * cards.length;
+    parent._loopLen = cardW * cards.length;
+  });
+}
+
+
 const quizData = [
   {
     icon: '🚶',
@@ -1565,7 +1650,7 @@ const quizData = [
     icon: '🍔',
     img: null,
     en: {
-      q: 'After finished your fast food…',
+      q: 'After finishing your fast food…',
       a: [
         { id: 'q2-a', text: 'Clean it up yourself', img: null },
         { id: 'q2-b', text: 'Leave it on the table', img: null }
@@ -1660,14 +1745,14 @@ const translations = {
   en: {
     tag: '★ 1 MIN. QUIZ ★',
     screenTitle: 'MUST-KNOW<br>KOREAN<br>MANNER QUIZ',
-    screenSub: 'Are you ready for Korea?',
+    screenSub: '30 Seconds Quiz & Get More Tips',
     cta: '▶ START QUIZ',
     pressStart: 'PRESS START →'
   },
   ms: {
     tag: '★ 1 MINIT KUIZ ★',
     screenTitle: 'KUIZ ADAB<br>KOREA YANG<br>MESTI TAHU',
-    screenSub: 'Bersedia untuk Korea?',
+    screenSub: 'Kuiz 30 Saat & Dapatkan Tips Lebih',
     cta: '▶ MULA KUIZ',
     pressStart: 'TEKAN MULA →'
   }
@@ -1678,11 +1763,11 @@ function setLang(l) {
   document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
   document.querySelector(`.lang-toggle button:${l === 'en' ? 'first' : 'last'}-child`).classList.add('active');
   const t = translations[l];
-  document.getElementById('screen-tag').textContent = t.tag;
   document.getElementById('screen-title').innerHTML = t.screenTitle;
   document.getElementById('screen-sub').textContent = t.screenSub;
   document.getElementById('main-cta').textContent = t.cta;
   document.getElementById('screen-blink').textContent = t.pressStart;
+  renderEtiquetteCards(l);
   if (currentQ > 0 && currentQ < quizData.length) renderQuestion();
 }
 
@@ -1920,6 +2005,7 @@ function createStars() {
   }
 }
 createStars();
+renderEtiquetteCards('en');
 
 // SCROLL EFFECTS
 const observer = new IntersectionObserver((entries) => {
@@ -1936,6 +2022,61 @@ window.addEventListener('load', () => {
     console.log(`gb-screen size: ${Math.round(r.width)}px × ${Math.round(r.height)}px`);
   }
 });
+
+// ETIQUETTE SLIDER — drag (mobile & desktop) + wheel (PC) + infinite loop
+(function() {
+  const wrap = document.getElementById('etiquette-slider');
+  if (!wrap) return;
+  const parent = wrap.parentElement;
+  let isDragging = false, startX = 0, scrollLeft = 0;
+
+  parent.addEventListener('mousedown', e => {
+    isDragging = true;
+    startX = e.pageX - parent.offsetLeft;
+    scrollLeft = parent.scrollLeft;
+    parent.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    parent.style.cursor = 'grab';
+  });
+  parent.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - parent.offsetLeft;
+    parent.scrollLeft = scrollLeft - (x - startX);
+  });
+
+  parent.addEventListener('touchstart', e => {
+    startX = e.touches[0].pageX;
+    scrollLeft = parent.scrollLeft;
+  }, { passive: true });
+  parent.addEventListener('touchmove', e => {
+    const x = e.touches[0].pageX;
+    parent.scrollLeft = scrollLeft - (x - startX);
+  }, { passive: true });
+
+  parent.addEventListener('wheel', e => {
+    e.preventDefault();
+    parent.scrollLeft += e.deltaY * 1.5;
+  }, { passive: false });
+
+  // infinite loop: jump when reaching edge set
+  parent.addEventListener('scroll', () => {
+    const len = parent._loopLen;
+    if (!len) return;
+    if (parent.scrollLeft <= 0) {
+      parent.scrollLeft += len;
+    } else if (parent.scrollLeft >= len * 2) {
+      parent.scrollLeft -= len;
+    }
+  });
+
+  parent.style.overflowX = 'auto';
+  parent.style.scrollBehavior = 'auto';
+  wrap.style.transition = 'none';
+})();
+
 
 // SMOOTH SCROLL
 function smoothScroll(id) {
