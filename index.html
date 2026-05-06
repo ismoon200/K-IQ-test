@@ -6,7 +6,7 @@
 <title>Must-Know Korean Manner Quiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Handjet&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --yellow: #E1FF46;
@@ -23,7 +23,7 @@
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Handjet', sans-serif;
     background: var(--bg);
     color: var(--dark);
     overflow-x: hidden;
@@ -470,7 +470,7 @@
   }
 
   .question-text {
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Handjet', sans-serif;
     font-size: 13px;
     font-weight: 700;
     color: var(--dark);
@@ -569,7 +569,7 @@
 
   /* 텍스트 레이블 */
   .choice-card-label {
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Handjet', sans-serif;
     font-size: 12px;
     font-weight: 700;
     color: var(--dark);
@@ -684,7 +684,7 @@
   }
 
   .result-msg {
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Handjet', sans-serif;
     font-size: 13px;
     color: #ccc;
     margin-bottom: 16px;
@@ -979,7 +979,7 @@
   }
 
   .card-desc {
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Handjet', sans-serif;
     font-size: 15px;
     font-weight: 500;
     color: #444;
@@ -1031,7 +1031,7 @@
   }
 
   .share-sub {
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Handjet', sans-serif;
     font-size: 18px;
     font-weight: 600;
     color: var(--dark);
@@ -1163,28 +1163,6 @@
     50% { opacity: 1; transform: scale(1); }
   }
 
-  /* LEVEL UP EFFECT */
-  .levelup {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Press Start 2P', monospace;
-    font-size: 14px;
-    color: var(--yellow);
-    text-shadow: 2px 2px 0 var(--dark);
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 20;
-    animation: levelupAnim 1.8s ease forwards;
-    display: none;
-  }
-
-  @keyframes levelupAnim {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-    50% { opacity: 1; transform: translate(-50%, -80%) scale(1.2); }
-    100% { opacity: 0; transform: translate(-50%, -120%) scale(1); }
-  }
-
   /* MOBILE */
   @media (max-width: 768px) {
     .gameboy-device { width: 360px; }
@@ -1287,7 +1265,7 @@
   }
 
   .share-modal-sub {
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Handjet', sans-serif;
     font-size: 14px;
     font-weight: 600;
     color: #555;
@@ -1414,9 +1392,6 @@
               <div class="feedback-overlay" id="feedback-overlay">
                 <div class="feedback-mark" id="feedback-mark"></div>
               </div>
-              <!-- LEVELUP -->
-              <div class="levelup" id="levelup">★ LEVEL UP!</div>
-
               <!-- START SCREEN -->
               <div class="start-screen" id="start-screen">
                 <!-- 배경 이미지 -->
@@ -1785,7 +1760,6 @@ function selectAnswer(chosen, correct, feedback) {
   const isCorrect = chosen === correct;
   if (isCorrect) {
     score++;
-    showLevelUp();
     updateHP();
   }
 
@@ -1801,19 +1775,13 @@ function selectAnswer(chosen, correct, feedback) {
     currentQ++;
     if (currentQ < quizData.length) renderQuestion();
     else showResult();
-  }, 1200);
+  }, 450);
 }
 
 function updateHP() {
   for (let i = 1; i <= 5; i++) {
     document.getElementById(`hp${i}`).className = `hp-pip${i <= score ? '' : ' empty'}`;
   }
-}
-
-function showLevelUp() {
-  const el = document.getElementById('levelup');
-  el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, 1800);
 }
 
 function showResult() {
@@ -1843,7 +1811,11 @@ function showResult() {
 function restartQuiz() { startQuiz(); }
 
 const SHARE_URL = window.location.href;
-const SHARE_TEXT = '🇰🇷 Can you pass the Must-Know Korean Manner Quiz? Test yourself before your trip to Korea!';
+
+function getShareText() {
+  const grades = ['RETRY?','TRY HARDER','GOOD!','GREAT!','AMAZING!','BEST!'];
+  return `🇰🇷 I scored ${score}/5 on the Must-Know Korean Manner Quiz! My grade: ${grades[score]} Can you beat me? Try it here:`;
+}
 
 function openShareModal() {
   document.getElementById('share-modal').classList.add('open');
@@ -1856,40 +1828,43 @@ function closeShareModal(e) {
 }
 
 function shareToTwitter() {
-  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(SHARE_URL)}`;
+  const text = getShareText();
+  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text + ' ' + SHARE_URL)}`;
   window.open(url, '_blank', 'noopener,width=600,height=400');
 }
 
 function shareToFacebook() {
-  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}`;
+  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}&quote=${encodeURIComponent(getShareText())}`;
   window.open(url, '_blank', 'noopener,width=600,height=400');
 }
 
 function shareToWhatsApp() {
-  const url = `https://wa.me/?text=${encodeURIComponent(SHARE_TEXT + ' ' + SHARE_URL)}`;
+  const text = getShareText();
+  const url = `https://wa.me/?text=${encodeURIComponent(text + ' ' + SHARE_URL)}`;
   window.open(url, '_blank', 'noopener');
 }
 
 function shareToTelegram() {
-  const url = `https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SHARE_TEXT)}`;
+  const text = getShareText();
+  const url = `https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(text)}`;
   window.open(url, '_blank', 'noopener');
 }
 
 function shareToInstagram() {
-  // Instagram은 직접 URL 공유 API가 없으므로 링크를 클립보드에 복사 후 안내
-  navigator.clipboard.writeText(SHARE_URL).then(() => {
-    closeShareModal();
-    showToast('✓ LINK COPIED! Paste it on Instagram');
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = SHARE_URL;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    closeShareModal();
-    showToast('✓ LINK COPIED! Paste it on Instagram');
-  });
+  // Instagram Direct: instagram.com/direct/new/ — 메시지 텍스트를 클립보드에 복사 후 DM 창 열기
+  const text = getShareText() + ' ' + SHARE_URL;
+  const copy = (t) => {
+    try { navigator.clipboard.writeText(t); } catch {
+      const ta = document.createElement('textarea');
+      ta.value = t; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  };
+  copy(text);
+  closeShareModal();
+  window.open('https://www.instagram.com/direct/new/', '_blank', 'noopener');
+  setTimeout(() => showToast('✓ TEXT COPIED! Paste it in Instagram DM'), 300);
 }
 
 function copyLinkFromModal() {
@@ -1923,7 +1898,6 @@ function copyLink() {
 }
 
 function shareResult() { openShareModal(); }
-
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
