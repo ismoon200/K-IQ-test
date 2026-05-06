@@ -186,11 +186,11 @@
     pointer-events: none;
   }
 
-  /* GAMEBOY DEVICE — v13: 그레인 회색 바디 */
+  /* GAMEBOY DEVICE — v29 */
   .gameboy-device {
     width: 420px;
     max-width: 95vw;
-    aspect-ratio: 3 / 5;
+    aspect-ratio: 3 / 4.5;
     background-color: #c0bfbc;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.35'/%3E%3C/svg%3E");
     border-radius: 0;
@@ -201,26 +201,6 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-  }
-
-  /* 샤인 스윕 */
-  .gameboy-device::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 60%; height: 100%;
-    background: linear-gradient(105deg, transparent 20%, rgba(192,255,255,0.35) 50%, transparent 80%);
-    animation: gbShine 4s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  @keyframes gbShine {
-    0%   { left: -100%; opacity: 0; }
-    10%  { opacity: 1; }
-    50%  { left: 130%; opacity: 1; }
-    51%  { opacity: 0; }
-    100% { left: 130%; opacity: 0; }
   }
 
   .gb-top {
@@ -330,18 +310,20 @@
     z-index: 0;
   }
 
-  /* 상단: 태그 + 외계인 */
-  .start-top {
+  /* 상단 텍스트 오버레이 — 위쪽에 그라데이션 */
+  .start-header-overlay {
     position: relative;
     z-index: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    padding-top: 16px;
+    padding: 20px 16px 28px;
+    background: linear-gradient(to bottom, rgba(10,10,20,0.88) 50%, transparent 100%);
   }
 
-  /* 하단 오버레이: 텍스트 + 버튼 */
+  /* 하단 버튼 오버레이 */
   .start-overlay {
     position: relative;
     z-index: 1;
@@ -350,22 +332,8 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    padding: 16px 16px 20px;
-    background: linear-gradient(to top, rgba(10,10,20,0.92) 60%, transparent 100%);
-  }
-
-  .alien-sprite {
-    width: 80px;
-    height: 80px;
-    display: block;
-    margin: 0 auto;
-    image-rendering: pixelated;
-    animation: float 2s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    padding: 20px 16px 24px;
+    background: linear-gradient(to top, rgba(10,10,20,0.88) 50%, transparent 100%);
   }
 
   .start-title {
@@ -387,6 +355,12 @@
     text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
   }
 
+  /* 버튼 플로팅 */
+  @keyframes btnFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 4px 4px 0 var(--dark); }
+    50%       { transform: translateY(-3px); box-shadow: 4px 7px 0 var(--dark); }
+  }
+
   .blink {
     animation: blink 1s step-end infinite;
   }
@@ -397,8 +371,28 @@
   }
 
   /* QUIZ SCREEN */
-  .quiz-screen { display: none; width: 100%; background: #2a2a2a; padding: 16px 12px; flex: 1; }
-  .result-screen { display: none; width: 100%; background: #2a2a2a; padding: 16px 12px; text-align: center; flex: 1; }  .progress-bar-wrap {
+  .quiz-screen {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #2a2a2a;
+    padding: 12px;
+    flex: 1;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  .result-screen {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #2a2a2a;
+    padding: 16px 12px;
+    text-align: center;
+    flex: 1;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }  .progress-bar-wrap {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -431,14 +425,15 @@
     border: 3px solid var(--dark);
     box-shadow: 3px 3px 0 var(--dark);
     padding: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     width: 100%;
+    flex-shrink: 0;
   }
 
   /* 문제 이미지 슬롯 */
   .q-img-slot {
     width: 100%;
-    height: 80px;
+    height: 200px;
     background: rgba(0,0,0,0.12);
     border: 2px dashed rgba(0,0,0,0.25);
     display: flex;
@@ -483,38 +478,74 @@
     line-height: 1.5;
   }
 
-  .choices {
-    display: flex;
-    flex-direction: column;
+  /* 카드 2열 선지 그리드 */
+  .choices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
     width: 100%;
+    margin-top: 8px;
+    flex-shrink: 0;
   }
 
-  .choice-btn {
-    font-family: 'Silkscreen', monospace;
-    font-size: 10px;
-    padding: 0;
-    background: white;
-    border: 3px solid var(--dark);
-    box-shadow: 3px 3px 0 var(--dark);
+  .choice-card {
+    background: #f5f5f5;
+    border: 3px solid #888;
+    border-radius: 10px;
+    box-shadow: 0 3px 0 #888;
     cursor: pointer;
-    text-align: left;
-    color: var(--dark);
-    transition: all 0.1s;
-    letter-spacing: 0.5px;
-    line-height: 1.4;
-    width: 100%;
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
+    align-items: center;
     overflow: hidden;
+    transition: transform 0.1s, box-shadow 0.1s;
+    position: relative;
   }
 
-  /* 선지 이미지 슬롯 */
-  .choice-img-slot {
-    width: 52px;
-    min-width: 52px;
-    background: rgba(0,0,0,0.06);
-    border-right: 2px solid var(--dark);
+  .choice-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #888;
+  }
+
+  .choice-card:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #888;
+  }
+
+  .choice-card.correct {
+    background: #d4f5d4;
+    border-color: #00aa66;
+    box-shadow: 0 3px 0 #00aa66;
+  }
+
+  .choice-card.wrong {
+    background: #ffd4d4;
+    border-color: #cc3333;
+    box-shadow: 0 3px 0 #cc3333;
+  }
+
+  /* 번호 뱃지 */
+  .choice-num {
+    position: absolute;
+    top: 6px; left: 6px;
+    width: 20px; height: 20px;
+    background: var(--dark);
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  /* 이미지 슬롯 */
+  .choice-card-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #e8e8e8;
+    border-bottom: 2px solid #ccc;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -522,29 +553,29 @@
     flex-shrink: 0;
   }
 
-  .choice-img-slot img {
+  .choice-card-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
   }
 
-  .choice-img-slot .img-placeholder {
+  .choice-card-img .img-placeholder {
     font-family: 'Press Start 2P', monospace;
     font-size: 5px;
-    color: rgba(0,0,0,0.25);
+    color: rgba(0,0,0,0.2);
     text-align: center;
-    padding: 4px;
-    line-height: 1.6;
-    pointer-events: none;
-    user-select: none;
+    line-height: 1.8;
   }
 
-  .choice-label {
-    padding: 10px 12px;
-    flex: 1;
-    display: flex;
-    align-items: center;
+  /* 텍스트 레이블 */
+  .choice-card-label {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dark);
+    text-align: center;
+    padding: 8px 6px;
+    line-height: 1.3;
   }
 
   .choice-btn:hover {
@@ -570,32 +601,56 @@
     box-shadow: 3px 3px 0 #cc3333;
   }
 
-  /* FEEDBACK */
+  /* FEEDBACK — O / X */
   .feedback-overlay {
     position: absolute;
     inset: 0;
     display: none;
     align-items: center;
     justify-content: center;
-    background: rgba(254,255,206,0.9);
     z-index: 10;
     flex-direction: column;
-    gap: 8px;
   }
 
-  .feedback-text {
+  .feedback-overlay.correct-bg {
+    background: rgba(0, 180, 100, 0.15);
+  }
+
+  .feedback-overlay.wrong-bg {
+    background: rgba(200, 0, 0, 0.12);
+  }
+
+  .feedback-mark {
     font-family: 'Press Start 2P', monospace;
-    font-size: 18px;
-    animation: popIn 0.3s ease;
+    line-height: 1;
+    text-align: center;
   }
 
-  .feedback-sub {
-    font-family: 'Pixelify Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-    text-align: center;
-    padding: 0 12px;
+  .feedback-mark.o-mark {
+    font-size: 96px;
+    color: #00cc66;
+    text-shadow: 0 0 20px rgba(0,200,100,0.6);
+    animation: popIn 0.3s ease forwards;
+  }
+
+  .feedback-mark.x-mark {
+    font-size: 96px;
+    color: #ff2222;
+    animation: glitch 0.4s steps(1) infinite;
+  }
+
+  @keyframes glitch {
+    0%   { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(0,0); }
+    10%  { text-shadow: -3px 0 #ff00ff, 3px 0 #00ffff; transform: translate(-3px, 1px); }
+    20%  { text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff; transform: translate(3px,-1px); clip-path: inset(10% 0 60% 0); }
+    30%  { text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; transform: translate(-2px, 2px); clip-path: inset(0); }
+    40%  { text-shadow: 4px 0 #ff00ff, -4px 0 #00ffff; transform: translate(4px, 0); }
+    50%  { text-shadow: -3px 0 #ff00ff, 3px 0 #00ffff; transform: translate(-3px,-2px); clip-path: inset(40% 0 20% 0); }
+    60%  { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(2px, 1px); clip-path: inset(0); }
+    70%  { text-shadow: -4px 0 #ff00ff, 4px 0 #00ffff; transform: translate(-4px, 0); }
+    80%  { text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff; transform: translate(3px, 2px); clip-path: inset(70% 0 5% 0); }
+    90%  { text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; transform: translate(-2px,-1px); clip-path: inset(0); }
+    100% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(0,0); }
   }
 
   @keyframes popIn {
@@ -756,18 +811,20 @@
   .screen-cta-btn {
     font-family: 'Silkscreen', monospace;
     font-size: 13px;
-    background: var(--yellow);
-    color: var(--dark);
+    background: #FE52A2;
+    color: #fff;
     border: 3px solid var(--dark);
-    box-shadow: 5px 5px 0 var(--dark);
-    padding: 14px 28px;
+    box-shadow: 4px 4px 0 var(--dark);
+    padding: 14px 36px;
     cursor: pointer;
     letter-spacing: 1px;
-    transition: all 0.1s;
+    transition: background 0.1s;
     display: inline-block;
     position: relative;
     overflow: hidden;
-    margin-top: 8px;
+    border-radius: 999px;
+    margin-top: 4px;
+    animation: btnFloat 2s ease-in-out infinite;
   }
 
   .screen-cta-btn::before {
@@ -775,7 +832,7 @@
     position: absolute;
     top: -50%; left: -60%;
     width: 30%; height: 200%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.4);
     transform: skewX(-20deg);
     animation: shine 3s infinite;
   }
@@ -787,13 +844,16 @@
   }
 
   .screen-cta-btn:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 7px 7px 0 var(--dark);
+    background: #ff6db3;
+    animation-play-state: paused;
+    transform: translateY(-3px);
+    box-shadow: 6px 7px 0 var(--dark);
   }
 
   .screen-cta-btn:active {
-    transform: translate(2px, 2px);
+    transform: translateY(1px);
     box-shadow: 2px 2px 0 var(--dark);
+    animation-play-state: paused;
   }
 
   .screen-tag {
@@ -1270,6 +1330,7 @@
   .share-social-btn.facebook  { background: #1877f2; color: #fff; }
   .share-social-btn.whatsapp  { background: #25d366; color: #fff; }
   .share-social-btn.telegram  { background: #229ed9; color: #fff; }
+  .share-social-btn.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; }
   .share-social-btn.copy-modal { background: var(--yellow); color: var(--dark); }
 
   .share-modal-close {
@@ -1336,22 +1397,22 @@
           <div class="gb-screen">
             <!-- STATUS BAR -->
             <div class="screen-status">
-              <span>MANNER BOY</span>
+              <span>MANNER QUIZ</span>
               <div class="hp-bar">
                 <div class="hp-pip" id="hp1"></div>
                 <div class="hp-pip" id="hp2"></div>
                 <div class="hp-pip" id="hp3"></div>
                 <div class="hp-pip" id="hp4"></div>
+                <div class="hp-pip" id="hp5"></div>
               </div>
-              <span id="q-count">Q 0/4</span>
+              <span id="q-count">Q 0/5</span>
             </div>
 
             <!-- SCREEN CONTENT -->
             <div class="screen-content" id="screen-content">
               <!-- FEEDBACK OVERLAY -->
               <div class="feedback-overlay" id="feedback-overlay">
-                <span class="feedback-text" id="feedback-emoji"></span>
-                <span class="feedback-sub" id="feedback-text"></span>
+                <div class="feedback-mark" id="feedback-mark"></div>
               </div>
               <!-- LEVELUP -->
               <div class="levelup" id="levelup">★ LEVEL UP!</div>
@@ -1360,32 +1421,13 @@
               <div class="start-screen" id="start-screen">
                 <!-- 배경 이미지 -->
                 <div class="start-bg"></div>
-                <!-- 상단: 태그 + 외계인 -->
-                <div class="start-top">
-                  <span class="screen-tag" id="screen-tag">★ 1 MIN. QUIZ ★</span>
-                  <svg class="alien-sprite" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="20" y="28" width="24" height="20" fill="#C0FFFF" rx="2"/>
-                    <rect x="24" y="24" width="16" height="12" fill="#C0FFFF" rx="2"/>
-                    <rect x="20" y="12" width="24" height="20" fill="#E1FF46" rx="4"/>
-                    <rect x="24" y="18" width="6" height="6" fill="#1a1a2e"/>
-                    <rect x="34" y="18" width="6" height="6" fill="#1a1a2e"/>
-                    <rect x="25" y="19" width="2" height="2" fill="white"/>
-                    <rect x="35" y="19" width="2" height="2" fill="white"/>
-                    <rect x="30" y="8" width="4" height="6" fill="#FF8EC6"/>
-                    <rect x="28" y="6" width="8" height="4" fill="#FF8EC6"/>
-                    <rect x="22" y="48" width="6" height="8" fill="#C0FFFF"/>
-                    <rect x="36" y="48" width="6" height="8" fill="#C0FFFF"/>
-                    <rect x="20" y="54" width="10" height="4" fill="#1a1a2e"/>
-                    <rect x="34" y="54" width="10" height="4" fill="#1a1a2e"/>
-                    <rect x="26" y="24" width="12" height="2" fill="#1a1a2e"/>
-                    <rect x="24" y="22" width="2" height="4" fill="#1a1a2e"/>
-                    <rect x="38" y="22" width="2" height="4" fill="#1a1a2e"/>
-                  </svg>
-                </div>
-                <!-- 하단: 텍스트 + 버튼 오버레이 -->
-                <div class="start-overlay">
+                <!-- 상단 텍스트 오버레이 -->
+                <div class="start-header-overlay">
                   <div class="start-title" id="screen-title">MUST-KNOW<br>KOREAN MANNER QUIZ</div>
                   <div class="start-sub" id="screen-sub">Are you ready for Korea?</div>
+                </div>
+                <!-- 하단 버튼 오버레이 -->
+                <div class="start-overlay">
                   <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
                   <div class="start-sub blink" style="margin-top:6px;" id="screen-blink">PRESS START →</div>
                 </div>
@@ -1394,17 +1436,17 @@
               <!-- QUIZ SCREEN -->
               <div class="quiz-screen" id="quiz-screen">
                 <div class="progress-bar-wrap">
-                  <span class="progress-label" id="prog-label">1/4</span>
+                  <span class="progress-label" id="prog-label">1/5</span>
                   <div class="progress-track">
                     <div class="progress-fill" id="prog-fill" style="width:25%"></div>
                   </div>
                 </div>
                 <div class="situation-box">
                   <div class="q-img-slot" id="q-img-slot"><span class="img-placeholder">IMAGE SLOT</span></div>
-                  <span class="situation-icon" id="sit-icon">🚇</span>
                   <div class="question-text" id="q-text">Loading...</div>
                 </div>
-                <div class="choices" id="choices"></div>
+                <!-- 카드 2열 선지 -->
+                <div class="choices-grid" id="choices"></div>
               </div>
 
               <!-- RESULT SCREEN -->
@@ -1505,7 +1547,10 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
         Telegram
       </button>
-      <button class="share-social-btn copy-modal" onclick="copyLinkFromModal()">
+      <button class="share-social-btn instagram" onclick="shareToInstagram()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        Instagram
+      </button>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Copy Link
       </button>
@@ -1520,91 +1565,113 @@
 <script>
 const quizData = [
   {
+    icon: '🚶',
+    img: null,
+    en: {
+      q: 'Where can you stand on an escalator?',
+      a: [
+        { id: 'q1-a', text: 'Left side', img: null },
+        { id: 'q1-b', text: 'Right side', img: null }
+      ],
+      correct: 1,
+      feedback: 'In Korea, stand on the right so others can walk on the left!'
+    },
+    ms: {
+      q: 'Di manakah anda sepatutnya berdiri di eskalator?',
+      a: [
+        { id: 'q1-a', text: 'Sebelah kiri', img: null },
+        { id: 'q1-b', text: 'Sebelah kanan', img: null }
+      ],
+      correct: 1,
+      feedback: 'Di Korea, berdiri di sebelah kanan supaya orang lain boleh berjalan di sebelah kiri!'
+    }
+  },
+  {
+    icon: '🍔',
+    img: null,
+    en: {
+      q: 'After finished your fast food…',
+      a: [
+        { id: 'q2-a', text: 'Clean it up yourself', img: null },
+        { id: 'q2-b', text: 'Leave it on the table', img: null }
+      ],
+      correct: 0,
+      feedback: 'In Korea, you\'re expected to tidy your own tray after eating!'
+    },
+    ms: {
+      q: 'Selepas makan di restoran makanan segera…',
+      a: [
+        { id: 'q2-a', text: 'Bersihkan sendiri', img: null },
+        { id: 'q2-b', text: 'Tinggalkan di atas meja', img: null }
+      ],
+      correct: 0,
+      feedback: 'Di Korea, anda perlu mengemas dulang sendiri selepas makan!'
+    }
+  },
+  {
+    icon: '☕',
+    img: null,
+    en: {
+      q: 'If you leave your bag at a cafe...',
+      a: [
+        { id: 'q3-a', text: 'Stolen', img: null },
+        { id: 'q3-b', text: 'Nothing happens', img: null }
+      ],
+      correct: 1,
+      feedback: 'Korea is very safe! Leaving your bag is a common way to reserve a seat.'
+    },
+    ms: {
+      q: 'Jika anda meninggalkan beg di kafe…',
+      a: [
+        { id: 'q3-a', text: 'Akan dicuri', img: null },
+        { id: 'q3-b', text: 'Tiada apa-apa yang berlaku', img: null }
+      ],
+      correct: 1,
+      feedback: 'Korea sangat selamat! Meninggalkan beg adalah cara biasa untuk tempah tempat duduk.'
+    }
+  },
+  {
     icon: '🚇',
-    img: null,          // 문제 이미지: 'https://...' 또는 null
-    en: {
-      q: 'You see empty seats in the subway...',
-      a: [
-        { id: 'q1-a', text: 'Sit in the pink seat', img: null },
-        { id: 'q1-b', text: 'Sit in the blue seat', img: null }
-      ],
-      correct: 1,
-      feedback: 'Pink seats are priority seats for elderly & pregnant!'
-    },
-    ms: {
-      q: 'Anda nampak tempat duduk kosong dalam tren...',
-      a: [
-        { id: 'q1-a', text: 'Duduk di kerusi merah jambu', img: null },
-        { id: 'q1-b', text: 'Duduk di kerusi biru', img: null }
-      ],
-      correct: 1,
-      feedback: 'Kerusi merah jambu adalah untuk warga emas & ibu mengandung!'
-    }
-  },
-  {
-    icon: '🛗',
     img: null,
     en: {
-      q: 'You are taking the elevator with someone...',
+      q: 'Which seats can you sit in on the subway?',
       a: [
-        { id: 'q2-a', text: 'Make small talk', img: null },
-        { id: 'q2-b', text: 'Press the close button', img: null }
+        { id: 'q4-a', text: 'Pink seats', img: null },
+        { id: 'q4-b', text: 'Blue seats', img: null }
       ],
       correct: 1,
-      feedback: 'Koreans prefer silence in elevators. Just press close!'
+      feedback: 'Pink seats are priority seats — for elderly, pregnant & disabled only!'
     },
     ms: {
-      q: 'Anda menaiki lif bersama seseorang...',
+      q: 'Tempat duduk manakah yang boleh diduduki di dalam tren?',
       a: [
-        { id: 'q2-a', text: 'Berbual mesra', img: null },
-        { id: 'q2-b', text: 'Tekan butang tutup', img: null }
+        { id: 'q4-a', text: 'Tempat duduk merah jambu', img: null },
+        { id: 'q4-b', text: 'Tempat duduk biru', img: null }
       ],
       correct: 1,
-      feedback: 'Orang Korea lebih suka diam dalam lif. Tekan sahaja butang tutup!'
-    }
-  },
-  {
-    icon: '🏪',
-    img: null,
-    en: {
-      q: 'You met a kind store owner...',
-      a: [
-        { id: 'q3-a', text: 'Thank them verbally and smile', img: null },
-        { id: 'q3-b', text: 'Give tips to appreciate the service', img: null }
-      ],
-      correct: 0,
-      feedback: 'Tipping is NOT common in Korea! A warm thank-you is perfect.'
-    },
-    ms: {
-      q: 'Anda jumpa pemilik kedai yang baik hati...',
-      a: [
-        { id: 'q3-a', text: 'Ucapkan terima kasih dan senyum', img: null },
-        { id: 'q3-b', text: 'Beri tip sebagai penghargaan', img: null }
-      ],
-      correct: 0,
-      feedback: 'Memberi tip TIDAK biasa di Korea! Ucapan terima kasih sudah cukup.'
+      feedback: 'Tempat duduk merah jambu adalah untuk warga emas, ibu mengandung & OKU sahaja!'
     }
   },
   {
     icon: '🍽️',
     img: null,
     en: {
-      q: 'You need to order at the restaurant...',
+      q: 'How do you find utensils at a restaurant?',
       a: [
-        { id: 'q4-a', text: 'Make eye contact with staff', img: null },
-        { id: 'q4-b', text: 'Use the ring bell to call service', img: null }
+        { id: 'q5-a', text: 'Open the table drawer', img: null },
+        { id: 'q5-b', text: 'Ask a staff', img: null }
       ],
-      correct: 1,
-      feedback: 'Most Korean restaurants have a call bell on the table. Use it!'
+      correct: 0,
+      feedback: 'Most Korean restaurants keep spoons & chopsticks in a table drawer!'
     },
     ms: {
-      q: 'Anda perlu membuat pesanan di restoran...',
+      q: 'Bagaimanakah cara mendapatkan sudu dan garpu di restoran?',
       a: [
-        { id: 'q4-a', text: 'Cuba buat hubungan mata dengan pekerja', img: null },
-        { id: 'q4-b', text: 'Guna loceng panggilan untuk panggil pelayan', img: null }
+        { id: 'q5-a', text: 'Buka laci meja', img: null },
+        { id: 'q5-b', text: 'Tanya staf', img: null }
       ],
-      correct: 1,
-      feedback: 'Kebanyakan restoran Korea ada loceng di meja. Gunakannya!'
+      correct: 0,
+      feedback: 'Kebanyakan restoran Korea menyimpan sudu & penyepit di dalam laci meja!'
     }
   }
 ];
@@ -1648,7 +1715,7 @@ function startQuiz() {
   currentQ = 0; score = 0; answered = false;
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'flex';
   updateHP();
   renderQuestion();
 }
@@ -1657,11 +1724,11 @@ function renderQuestion() {
   const q = quizData[currentQ];
   const d = q[lang];
   answered = false;
+  const total = quizData.length;
 
-  document.getElementById('prog-label').textContent = `${currentQ+1}/4`;
-  document.getElementById('prog-fill').style.width = `${((currentQ+1)/4)*100}%`;
-  document.getElementById('q-count').textContent = `Q ${currentQ+1}/4`;
-  document.getElementById('sit-icon').textContent = q.icon;
+  document.getElementById('prog-label').textContent = `${currentQ+1}/${total}`;
+  document.getElementById('prog-fill').style.width = `${((currentQ+1)/total)*100}%`;
+  document.getElementById('q-count').textContent = `Q ${currentQ+1}/${total}`;
   document.getElementById('q-text').textContent = d.q;
 
   // 문제 이미지 슬롯
@@ -1674,42 +1741,45 @@ function renderQuestion() {
     qImgSlot.style.display = 'flex';
   }
 
-  // 선지 렌더링
-  const choices = document.getElementById('choices');
-  choices.innerHTML = '';
+  // 카드 2열 선지 렌더링
+  const grid = document.getElementById('choices');
+  grid.innerHTML = '';
   d.a.forEach((ans, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.id = ans.id;
+    const card = document.createElement('button');
+    card.className = 'choice-card';
+    card.id = ans.id;
 
-    const imgSlot = document.createElement('div');
-    imgSlot.className = 'choice-img-slot';
-    if (ans.img) {
-      imgSlot.innerHTML = `<img src="${ans.img}" alt="choice image">`;
-    } else {
-      imgSlot.innerHTML = `<span class="img-placeholder">IMG</span>`;
-    }
+    const num = document.createElement('div');
+    num.className = 'choice-num';
+    num.textContent = i + 1;
 
-    const label = document.createElement('span');
-    label.className = 'choice-label';
-    label.textContent = `${i === 0 ? 'A' : 'B'}. ${ans.text}`;
+    const imgWrap = document.createElement('div');
+    imgWrap.className = 'choice-card-img';
+    imgWrap.innerHTML = ans.img
+      ? `<img src="${ans.img}" alt="choice image">`
+      : `<span class="img-placeholder">IMG<br>SLOT</span>`;
 
-    btn.appendChild(imgSlot);
-    btn.appendChild(label);
-    btn.onclick = () => selectAnswer(i, d.correct, d.feedback, d.a);
-    choices.appendChild(btn);
+    const label = document.createElement('div');
+    label.className = 'choice-card-label';
+    label.textContent = ans.text;
+
+    card.appendChild(num);
+    card.appendChild(imgWrap);
+    card.appendChild(label);
+    card.onclick = () => selectAnswer(i, d.correct, d.feedback);
+    grid.appendChild(card);
   });
 }
 
-function selectAnswer(chosen, correct, feedback, choices) {
+function selectAnswer(chosen, correct, feedback) {
   if (answered) return;
   answered = true;
 
-  const btns = document.querySelectorAll('.choice-btn');
-  btns.forEach((b, i) => {
-    if (i === correct) b.classList.add('correct');
-    else if (i === chosen) b.classList.add('wrong');
-    b.style.pointerEvents = 'none';
+  const cards = document.querySelectorAll('.choice-card');
+  cards.forEach((c, i) => {
+    if (i === correct) c.classList.add('correct');
+    else if (i === chosen) c.classList.add('wrong');
+    c.style.pointerEvents = 'none';
   });
 
   const isCorrect = chosen === correct;
@@ -1720,9 +1790,10 @@ function selectAnswer(chosen, correct, feedback, choices) {
   }
 
   const overlay = document.getElementById('feedback-overlay');
-  document.getElementById('feedback-emoji').textContent = isCorrect ? '✓' : '✗';
-  document.getElementById('feedback-emoji').style.color = isCorrect ? '#00aa66' : '#cc3333';
-  document.getElementById('feedback-text').textContent = feedback;
+  const mark = document.getElementById('feedback-mark');
+  overlay.className = 'feedback-overlay ' + (isCorrect ? 'correct-bg' : 'wrong-bg');
+  mark.className = 'feedback-mark ' + (isCorrect ? 'o-mark' : 'x-mark');
+  mark.textContent = isCorrect ? 'O' : 'X';
   overlay.style.display = 'flex';
 
   setTimeout(() => {
@@ -1730,11 +1801,11 @@ function selectAnswer(chosen, correct, feedback, choices) {
     currentQ++;
     if (currentQ < quizData.length) renderQuestion();
     else showResult();
-  }, 2000);
+  }, 1200);
 }
 
 function updateHP() {
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 5; i++) {
     document.getElementById(`hp${i}`).className = `hp-pip${i <= score ? '' : ' empty'}`;
   }
 }
@@ -1747,19 +1818,20 @@ function showLevelUp() {
 
 function showResult() {
   document.getElementById('quiz-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('result-screen').style.display = 'flex';
   document.getElementById('q-count').textContent = `DONE!`;
 
   const grades = [
-    { label: 'RETRY?', msg: 'Time to study Korean manners! 😅', color: '#ffcccc' },
-    { label: 'TRY HARDER', msg: 'You know a little! Keep learning 🌱', color: '#ffe0cc' },
-    { label: 'GOOD!', msg: 'Not bad! Korea is almost ready for you 🎌', color: '#ffffcc' },
-    { label: 'GREAT!', msg: 'Impressive! You\'ll fit right in 🎉', color: '#C0FFFF' },
-    { label: 'BEST!', msg: 'You\'re a Korean manner master! 👑', color: '#E1FF46' }
+    { label: 'RETRY?',      msg: 'Time to study Korean manners! 😅',              color: '#ffcccc' },
+    { label: 'TRY HARDER',  msg: 'You know a little! Keep learning 🌱',           color: '#ffe0cc' },
+    { label: 'GOOD!',       msg: 'Not bad! Korea is almost ready for you 🎌',     color: '#ffffcc' },
+    { label: 'GREAT!',      msg: 'Impressive! You\'ll fit right in 🎉',           color: '#C0FFFF' },
+    { label: 'AMAZING!',    msg: 'Almost perfect! Korea loves you 🇰🇷',           color: '#d4f5d4' },
+    { label: 'BEST!',       msg: 'You\'re a Korean manner master! 👑',            color: '#E1FF46' }
   ];
 
   const g = grades[score];
-  document.getElementById('result-score').textContent = `${score}/4`;
+  document.getElementById('result-score').textContent = `${score}/5`;
   document.getElementById('result-grade').textContent = g.label;
   document.getElementById('result-msg').textContent = g.msg;
 
@@ -1801,6 +1873,23 @@ function shareToWhatsApp() {
 function shareToTelegram() {
   const url = `https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SHARE_TEXT)}`;
   window.open(url, '_blank', 'noopener');
+}
+
+function shareToInstagram() {
+  // Instagram은 직접 URL 공유 API가 없으므로 링크를 클립보드에 복사 후 안내
+  navigator.clipboard.writeText(SHARE_URL).then(() => {
+    closeShareModal();
+    showToast('✓ LINK COPIED! Paste it on Instagram');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = SHARE_URL;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    closeShareModal();
+    showToast('✓ LINK COPIED! Paste it on Instagram');
+  });
 }
 
 function copyLinkFromModal() {
@@ -1864,6 +1953,15 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// SCREEN SIZE LOGGER
+window.addEventListener('load', () => {
+  const screen = document.querySelector('.gb-screen');
+  if (screen) {
+    const r = screen.getBoundingClientRect();
+    console.log(`gb-screen size: ${Math.round(r.width)}px × ${Math.round(r.height)}px`);
+  }
+});
 
 // SMOOTH SCROLL
 function smoothScroll(id) {
