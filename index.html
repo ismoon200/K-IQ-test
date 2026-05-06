@@ -325,8 +325,8 @@
 
   /* 플로팅 로고 */
   .start-logo-float {
-    width: 51%;
-    max-width: 192px;
+    width: 61%;
+    max-width: 230px;
     object-fit: contain;
     animation: float 2.4s ease-in-out infinite;
     filter: drop-shadow(0 8px 18px rgba(0,0,0,0.5));
@@ -950,27 +950,30 @@
     opacity: 0.7;
   }
 
-  .etiquette-slider-wrap:active { cursor: grabbing; }
+  .etiquette-slider-wrap:active { cursor: default; }
 
+  /* 세로 스크롤 컨테이너 */
   .etiquette-slider {
     display: flex;
+    flex-direction: column;
     gap: 20px;
-    width: max-content;
-    transition: transform 0.05s linear;
+    width: 100%;
   }
 
+  /* 카드 3:2 비율 (가로:세로) */
   .etiquette-card {
-    width: 280px;
-    min-height: 360px;
+    width: 100%;
+    aspect-ratio: 3 / 2;
     background: var(--bg);
     border: 4px solid var(--yellow);
     box-shadow: 6px 6px 0 var(--yellow);
-    padding: 24px 20px;
+    padding: 20px 24px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    gap: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
   }
 
   .etiquette-card:nth-child(2n) {
@@ -983,17 +986,14 @@
     box-shadow: 6px 6px 0 var(--pink);
   }
 
-  .etiquette-card:hover {
-    transform: translateY(-4px);
-  }
-
   .etiquette-card-title {
     font-family: 'Silkscreen', monospace;
-    font-size: 28px;
+    font-size: 20px;
     color: var(--dark);
     line-height: 1.4;
     border-bottom: 3px solid currentColor;
-    padding-bottom: 12px;
+    padding-bottom: 10px;
+    flex-shrink: 0;
   }
 
   .etiquette-list {
@@ -1002,26 +1002,28 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
+    overflow: hidden;
   }
 
   .etiquette-list li {
     font-family: 'Handjet', sans-serif;
     font-size: 15px;
     color: #000;
-    line-height: 1.7;
+    line-height: 1.5;
     padding-left: 0;
   }
 
-  /* 스크롤바 숨기기 */
+  /* 세로 스크롤 wrapper */
   .etiquette-slider-wrap {
+    height: 420px;
     overflow: hidden;
-    cursor: grab;
     user-select: none;
-    padding: 0 2rem 2rem;
+    padding: 0 2rem;
     position: relative;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    touch-action: none;
   }
   .etiquette-slider-wrap::-webkit-scrollbar { display: none; }
 
@@ -1621,8 +1623,8 @@ const etiquetteData = {
 };
 
 function renderEtiquetteCards(l) {
-  const slider = document.getElementById('etiquette-slider');
-  if (!slider) return;
+  const wrap = document.getElementById('etiquette-slider');
+  if (!wrap) return;
   const cards = etiquetteData[l] || etiquetteData.en;
   const colors = ['var(--yellow)', 'var(--cyan)', 'var(--pink)'];
   const makeCards = () => cards.map((card, i) => `
@@ -1630,14 +1632,16 @@ function renderEtiquetteCards(l) {
       <div class="etiquette-card-title">${card.title}</div>
       <ul class="etiquette-list">${card.items.map(it => `<li>${it}</li>`).join('')}</ul>
     </div>`).join('');
-  // 3벌 복사해서 무한 루프처럼 보이게
-  slider.innerHTML = makeCards() + makeCards() + makeCards();
-  // 중간 세트로 초기 위치 설정
-  const parent = slider.parentElement;
+  wrap.innerHTML = makeCards() + makeCards() + makeCards();
+  // 중간 세트로 초기 위치 (wrap의 부모가 scroll 컨테이너)
+  const parent = wrap.parentElement;
   requestAnimationFrame(() => {
-    const cardW = 280 + 20; // card width + gap
-    parent.scrollLeft = cardW * cards.length;
-    parent._loopLen = cardW * cards.length;
+    const cardH = parent.clientWidth * (2/3) + 20 + 8; // aspect-ratio 3:2 + gap + border
+    const oneSet = cardH * cards.length;
+    parent._loopLen = oneSet;
+    parent._scrollPos = oneSet;
+    parent.style.overflow = 'hidden';
+    wrap.style.transform = `translateY(-${oneSet}px)`;
   });
 }
 
@@ -2042,45 +2046,94 @@ window.addEventListener('load', () => {
   }
 });
 
-// ETIQUETTE SLIDER — momentum drag + smooth deceleration + infinite loop
+// ETIQUETTE SLIDER — vertical momentum + infinite loop + page scroll lock
 (function() {
   const wrap = document.getElementById('etiquette-slider');
   if (!wrap) return;
-  const el = wrap.parentElement;
+  const el = wrap.parentElement; // .etiquette-slider-wrap
 
-  let isDragging = false;
-  let startX = 0, startScroll = 0;
-  let lastX = 0, lastTime = 0;
+  let pos = 0;         // current translateY offset (negative = scrolled down)
   let velocity = 0;
   let rafId = null;
+  let startY = 0, lastY = 0, lastTime = 0;
+  let isDragging = false;
+  let pageScrollLocked = false;
+  let lockTimeout = null;
+
+  function getLoopLen() { return el._loopLen || 0; }
+
+  function setPos(p) {
+    const len = getLoopLen();
+    if (len > 0) {
+      if (-p >= len * 2) p += len;
+      if (-p <= 0)       p -= len;
+    }
+    pos = p;
+    wrap.style.transform = `translateY(${pos}px)`;
+  }
 
   function cancelMomentum() {
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   }
 
   function applyMomentum() {
-    velocity *= 0.92; // 감속 계수 — 클수록 더 오래 미끄러짐
-    if (Math.abs(velocity) < 0.4) { velocity = 0; return; }
-    el.scrollLeft -= velocity;
-    loopCheck();
+    velocity *= 0.93;
+    if (Math.abs(velocity) < 0.3) { velocity = 0; unlockPage(); return; }
+    setPos(pos - velocity);
     rafId = requestAnimationFrame(applyMomentum);
   }
 
-  function loopCheck() {
-    const len = el._loopLen;
-    if (!len) return;
-    if (el.scrollLeft <= 0) el.scrollLeft += len;
-    else if (el.scrollLeft >= len * 2) el.scrollLeft -= len;
+  function lockPage() {
+    if (pageScrollLocked) return;
+    pageScrollLocked = true;
+    document.body.style.overflow = 'hidden';
+    clearTimeout(lockTimeout);
   }
+
+  function unlockPage() {
+    clearTimeout(lockTimeout);
+    lockTimeout = setTimeout(() => {
+      pageScrollLocked = false;
+      document.body.style.overflow = '';
+    }, 400);
+  }
+
+  // TOUCH
+  el.addEventListener('touchstart', e => {
+    cancelMomentum();
+    startY = e.touches[0].clientY;
+    lastY = startY;
+    lastTime = Date.now();
+    isDragging = true;
+    lockPage();
+  }, { passive: true });
+
+  el.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    e.stopPropagation();
+    const y = e.touches[0].clientY;
+    const dy = y - lastY;
+    const now = Date.now();
+    const dt = now - lastTime || 1;
+    velocity = -dy / dt * 10;
+    lastY = y;
+    lastTime = now;
+    setPos(pos + dy);
+  }, { passive: false });
+
+  el.addEventListener('touchend', () => {
+    isDragging = false;
+    rafId = requestAnimationFrame(applyMomentum);
+    unlockPage();
+  });
 
   // MOUSE
   el.addEventListener('mousedown', e => {
     cancelMomentum();
-    isDragging = true;
-    startX = e.pageX;
-    startScroll = el.scrollLeft;
-    lastX = e.pageX;
+    startY = e.clientY;
+    lastY = startY;
     lastTime = Date.now();
+    isDragging = true;
     el.style.cursor = 'grabbing';
   });
 
@@ -2091,55 +2144,27 @@ window.addEventListener('load', () => {
     rafId = requestAnimationFrame(applyMomentum);
   });
 
-  el.addEventListener('mousemove', e => {
+  document.addEventListener('mousemove', e => {
     if (!isDragging) return;
-    e.preventDefault();
-    const dx = e.pageX - startX;
-    el.scrollLeft = startScroll - dx;
-    // velocity 계산
+    const dy = e.clientY - lastY;
     const now = Date.now();
     const dt = now - lastTime || 1;
-    velocity = (lastX - e.pageX) / dt * 12;
-    lastX = e.pageX;
+    velocity = -dy / dt * 10;
+    lastY = e.clientY;
     lastTime = now;
-    loopCheck();
-  });
-
-  // TOUCH
-  el.addEventListener('touchstart', e => {
-    cancelMomentum();
-    startX = e.touches[0].pageX;
-    startScroll = el.scrollLeft;
-    lastX = startX;
-    lastTime = Date.now();
-  }, { passive: true });
-
-  el.addEventListener('touchmove', e => {
-    const x = e.touches[0].pageX;
-    el.scrollLeft = startScroll - (x - startX);
-    const now = Date.now();
-    const dt = now - lastTime || 1;
-    velocity = (lastX - x) / dt * 12;
-    lastX = x;
-    lastTime = now;
-    loopCheck();
-  }, { passive: true });
-
-  el.addEventListener('touchend', () => {
-    rafId = requestAnimationFrame(applyMomentum);
+    setPos(pos + dy);
   });
 
   // WHEEL
   el.addEventListener('wheel', e => {
     e.preventDefault();
     cancelMomentum();
-    el.scrollLeft += e.deltaY * 1.5;
-    loopCheck();
+    setPos(pos - e.deltaY * 1.2);
   }, { passive: false });
 
-  el.style.overflowX = 'hidden';
-  el.style.scrollBehavior = 'auto';
-  wrap.style.transition = 'none';
+  // init pos after cards rendered
+  el.style.cursor = 'grab';
+  el.style.overflow = 'hidden';
 })();
 
 
