@@ -59,16 +59,25 @@
     z-index: 100;
     background: var(--dark);
     border-bottom: 4px solid var(--yellow);
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     height: 64px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 20px;
+  }
+
+  /* 데스크톱: 로고 좌측 고정 */
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
   }
 
   .logo {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
   }
 
   .logo-img {
@@ -78,11 +87,12 @@
     display: block;
   }
 
+  /* 데스크톱: nav 중앙 영역 */
   nav {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    flex-shrink: 0;
+    gap: 1.2rem;
+    flex: 1;
   }
 
   .nav-btn {
@@ -96,6 +106,7 @@
     transition: color 0.1s;
     position: relative;
     padding-bottom: 2px;
+    white-space: nowrap;
   }
 
   .nav-btn::after {
@@ -122,6 +133,7 @@
     border: 2px solid var(--cyan);
     border-radius: 0;
     overflow: hidden;
+    flex-shrink: 0;
   }
 
   .lang-toggle button {
@@ -288,25 +300,58 @@
   /* SCREEN CONTENT */
   .screen-content {
     flex: 1;
-    padding: 20px 16px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     min-height: 0;
-    background: #2a2a2a;
+    background: transparent;
   }
 
   /* START SCREEN */
   .start-screen {
-    text-align: center;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 배경 이미지 */
+  .start-bg {
+    position: absolute;
+    inset: 0;
+    background: url('Main.png') center center / cover no-repeat;
+    z-index: 0;
+  }
+
+  /* 상단: 태그 + 외계인 */
+  .start-top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-top: 16px;
+  }
+
+  /* 하단 오버레이: 텍스트 + 버튼 */
+  .start-overlay {
+    position: relative;
+    z-index: 1;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    gap: 8px;
+    padding: 16px 16px 20px;
+    background: linear-gradient(to top, rgba(10,10,20,0.92) 60%, transparent 100%);
   }
 
   .alien-sprite {
@@ -328,16 +373,18 @@
     font-size: 9px;
     color: var(--yellow);
     line-height: 1.8;
-    margin-bottom: 8px;
-    text-shadow: 1px 1px 0 var(--pink);
+    margin-bottom: 4px;
+    text-shadow: 1px 1px 0 var(--pink), 0 0 12px rgba(225,255,70,0.5);
+    text-align: center;
   }
 
   .start-sub {
     font-family: 'Silkscreen', monospace;
     font-size: 10px;
-    color: #ccc;
-    margin-bottom: 20px;
-    letter-spacing: 2px;
+    color: #fff;
+    letter-spacing: 1px;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
   }
 
   .blink {
@@ -350,9 +397,8 @@
   }
 
   /* QUIZ SCREEN */
-  .quiz-screen { display: none; width: 100%; }
-
-  .progress-bar-wrap {
+  .quiz-screen { display: none; width: 100%; background: #2a2a2a; padding: 16px 12px; flex: 1; }
+  .result-screen { display: none; width: 100%; background: #2a2a2a; padding: 16px 12px; text-align: center; flex: 1; }  .progress-bar-wrap {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -559,12 +605,6 @@
   }
 
   /* RESULT SCREEN */
-  .result-screen {
-    display: none;
-    width: 100%;
-    text-align: center;
-  }
-
   .result-badge {
     width: 80px;
     height: 80px;
@@ -575,7 +615,7 @@
   .result-score {
     font-family: 'Press Start 2P', monospace;
     font-size: 20px;
-    color: var(--dark);
+    color: var(--yellow);
     margin-bottom: 6px;
     text-shadow: 2px 2px 0 var(--pink);
   }
@@ -583,7 +623,7 @@
   .result-grade {
     font-family: 'Press Start 2P', monospace;
     font-size: 12px;
-    color: var(--dark);
+    color: #fff;
     margin-bottom: 16px;
     letter-spacing: 2px;
   }
@@ -591,7 +631,7 @@
   .result-msg {
     font-family: 'Pixelify Sans', sans-serif;
     font-size: 13px;
-    color: #444;
+    color: #ccc;
     margin-bottom: 16px;
     line-height: 1.5;
   }
@@ -1094,18 +1134,62 @@
   }
 
   @media (max-width: 480px) {
-    .gameboy-section { padding: 80px 0.5rem 2rem; }
+    .gameboy-section { padding: 96px 0.5rem 2rem; }
     .gameboy-device { width: 90vw; max-width: 360px; border-radius: 0; }
-    header { padding: 0 0.75rem; gap: 0.5rem; }
-    .logo-img { height: 36px; }
-    nav { gap: 0.5rem; }
-    .nav-btn { font-size: 8px; letter-spacing: 0; }
-    .lang-toggle button { font-size: 8px; padding: 5px 7px; }
+
+    /* 2줄 헤더 */
+    header {
+      height: auto;
+      padding: 6px 12px 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      overflow: visible;
+    }
+
+    /* 1행: 로고 + 언어토글 */
+    .header-left {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      padding-bottom: 4px;
+    }
+
+    .logo { flex-shrink: 0; }
+    .logo-img { height: 32px; }
+
+    /* 언어토글 1행 우측 고정 */
+    .lang-toggle {
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .lang-toggle button { font-size: 9px; padding: 5px 8px; }
+
+    /* 2행: GNB */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      width: 100%;
+      padding: 4px 0 6px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-btn {
+      font-size: 10px;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
   }
 
   @media (max-width: 360px) {
-    .nav-btn { font-size: 7px; }
-    .logo-img { height: 30px; }
+    .logo-img { height: 26px; }
+    .lang-toggle button { font-size: 8px; padding: 4px 6px; }
+    .nav-btn { font-size: 9px; }
+    nav { gap: 8px; }
   }
 
   /* SHARE MODAL */
@@ -1222,18 +1306,20 @@
 
 <!-- HEADER -->
 <header>
-  <div class="logo">
-    <img src="Logo.png" alt="Must-Know Korean Manner Quiz" class="logo-img">
+  <div class="header-left">
+    <div class="logo">
+      <img src="Logo.png" alt="Must-Know Korean Manner Quiz" class="logo-img">
+    </div>
+    <div class="lang-toggle">
+      <button class="active" onclick="setLang('en')">EN</button>
+      <button onclick="setLang('ms')">BM</button>
+    </div>
   </div>
   <nav>
     <button class="nav-btn active" onclick="smoothScroll('quiz')">Quiz</button>
     <button class="nav-btn" onclick="smoothScroll('about')">About Quiz</button>
     <button class="nav-btn" onclick="smoothScroll('share')">Share</button>
   </nav>
-  <div class="lang-toggle">
-    <button class="active" onclick="setLang('en')">EN</button>
-    <button onclick="setLang('ms')">BM</button>
-  </div>
 </header>
 
 <!-- SECTION 1: QUIZ -->
@@ -1272,29 +1358,37 @@
 
               <!-- START SCREEN -->
               <div class="start-screen" id="start-screen">
-                <span class="screen-tag" id="screen-tag">★ 1 MIN. QUIZ ★</span>
-                <svg class="alien-sprite" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="20" y="28" width="24" height="20" fill="#C0FFFF" rx="2"/>
-                  <rect x="24" y="24" width="16" height="12" fill="#C0FFFF" rx="2"/>
-                  <rect x="20" y="12" width="24" height="20" fill="#E1FF46" rx="4"/>
-                  <rect x="24" y="18" width="6" height="6" fill="#1a1a2e"/>
-                  <rect x="34" y="18" width="6" height="6" fill="#1a1a2e"/>
-                  <rect x="25" y="19" width="2" height="2" fill="white"/>
-                  <rect x="35" y="19" width="2" height="2" fill="white"/>
-                  <rect x="30" y="8" width="4" height="6" fill="#FF8EC6"/>
-                  <rect x="28" y="6" width="8" height="4" fill="#FF8EC6"/>
-                  <rect x="22" y="48" width="6" height="8" fill="#C0FFFF"/>
-                  <rect x="36" y="48" width="6" height="8" fill="#C0FFFF"/>
-                  <rect x="20" y="54" width="10" height="4" fill="#1a1a2e"/>
-                  <rect x="34" y="54" width="10" height="4" fill="#1a1a2e"/>
-                  <rect x="26" y="24" width="12" height="2" fill="#1a1a2e"/>
-                  <rect x="24" y="22" width="2" height="4" fill="#1a1a2e"/>
-                  <rect x="38" y="22" width="2" height="4" fill="#1a1a2e"/>
-                </svg>
-                <div class="start-title" id="screen-title">MUST-KNOW<br>KOREAN<br>MANNER QUIZ</div>
-                <div class="start-sub" id="screen-sub">Are you ready for Korea?</div>
-                <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
-                <div class="start-sub blink" style="margin-top:8px;" id="screen-blink">PRESS START →</div>
+                <!-- 배경 이미지 -->
+                <div class="start-bg"></div>
+                <!-- 상단: 태그 + 외계인 -->
+                <div class="start-top">
+                  <span class="screen-tag" id="screen-tag">★ 1 MIN. QUIZ ★</span>
+                  <svg class="alien-sprite" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="28" width="24" height="20" fill="#C0FFFF" rx="2"/>
+                    <rect x="24" y="24" width="16" height="12" fill="#C0FFFF" rx="2"/>
+                    <rect x="20" y="12" width="24" height="20" fill="#E1FF46" rx="4"/>
+                    <rect x="24" y="18" width="6" height="6" fill="#1a1a2e"/>
+                    <rect x="34" y="18" width="6" height="6" fill="#1a1a2e"/>
+                    <rect x="25" y="19" width="2" height="2" fill="white"/>
+                    <rect x="35" y="19" width="2" height="2" fill="white"/>
+                    <rect x="30" y="8" width="4" height="6" fill="#FF8EC6"/>
+                    <rect x="28" y="6" width="8" height="4" fill="#FF8EC6"/>
+                    <rect x="22" y="48" width="6" height="8" fill="#C0FFFF"/>
+                    <rect x="36" y="48" width="6" height="8" fill="#C0FFFF"/>
+                    <rect x="20" y="54" width="10" height="4" fill="#1a1a2e"/>
+                    <rect x="34" y="54" width="10" height="4" fill="#1a1a2e"/>
+                    <rect x="26" y="24" width="12" height="2" fill="#1a1a2e"/>
+                    <rect x="24" y="22" width="2" height="4" fill="#1a1a2e"/>
+                    <rect x="38" y="22" width="2" height="4" fill="#1a1a2e"/>
+                  </svg>
+                </div>
+                <!-- 하단: 텍스트 + 버튼 오버레이 -->
+                <div class="start-overlay">
+                  <div class="start-title" id="screen-title">MUST-KNOW<br>KOREAN MANNER QUIZ</div>
+                  <div class="start-sub" id="screen-sub">Are you ready for Korea?</div>
+                  <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
+                  <div class="start-sub blink" style="margin-top:6px;" id="screen-blink">PRESS START →</div>
+                </div>
               </div>
 
               <!-- QUIZ SCREEN -->
