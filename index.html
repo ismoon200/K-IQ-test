@@ -12,7 +12,7 @@
     --yellow: #E1FF46;
     --cyan: #C0FFFF;
     --pink: #FF8EC6;
-    --bg: #FEFFCE;
+    --bg: #E0CAF4;
     --dark: #1a1a2e;
     --darker: #0f0f1a;
     --pixel-border: 4px;
@@ -82,6 +82,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    flex-shrink: 0;
   }
 
   .nav-btn {
@@ -211,10 +212,9 @@
   }
 
   .gb-top {
-    padding: 20px 20px 12px;
+    padding: 0;
     background: transparent;
     border-radius: 0;
-    border-bottom: 4px solid #aaa;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -1088,9 +1088,7 @@
   /* MOBILE */
   @media (max-width: 768px) {
     .gameboy-device { width: 360px; }
-    nav { gap: 1rem; }
-    .logo { font-size: 8px; }
-    nav a { font-size: 9px; }
+    nav { gap: 0.75rem; }
     .about-section { padding: 4rem 1.5rem; }
     .section-title { font-size: 14px; }
   }
@@ -1098,8 +1096,16 @@
   @media (max-width: 480px) {
     .gameboy-section { padding: 80px 0.5rem 2rem; }
     .gameboy-device { width: 90vw; max-width: 360px; border-radius: 0; }
-    header { padding: 0 1rem; }
-    nav { display: none; }
+    header { padding: 0 0.75rem; gap: 0.5rem; }
+    .logo-img { height: 36px; }
+    nav { gap: 0.5rem; }
+    .nav-btn { font-size: 8px; letter-spacing: 0; }
+    .lang-toggle button { font-size: 8px; padding: 5px 7px; }
+  }
+
+  @media (max-width: 360px) {
+    .nav-btn { font-size: 7px; }
+    .logo-img { height: 30px; }
   }
 
   /* SHARE MODAL */
@@ -1240,7 +1246,6 @@
     <!-- GAMEBOY (centered, no hero-text beside it) -->
     <div class="gameboy-device">
       <div class="gb-top">
-        <div class="gb-label">◆ MANNER BOY COLOR ◆</div>
         <div class="gb-screen-frame">
           <div class="gb-screen">
             <!-- STATUS BAR -->
@@ -1327,27 +1332,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="gb-bottom">
-        <div class="gb-controls">
-          <div class="dpad">
-            <div class="dpad-h"></div>
-            <div class="dpad-v"></div>
-            <div class="dpad-center"></div>
-          </div>
-          <div class="select-start">
-            <div class="sel-start-btns">
-              <div class="mini-btn"></div>
-              <div class="mini-btn"></div>
-            </div>
-            <div class="gb-brand">SELECT · START</div>
-          </div>
-          <div class="ab-buttons">
-            <div class="gb-btn gb-btn-b">B</div>
-            <div class="gb-btn gb-btn-a">A</div>
-          </div>
-        </div>
-        <div class="gb-brand" style="margin-top:12px; font-size:11px; letter-spacing:4px;">MANNER BOY™</div>
       </div>
     </div>
   </div>
