@@ -67,12 +67,15 @@
   }
 
   .logo {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    color: var(--yellow);
-    text-shadow: 2px 2px 0 var(--pink);
-    line-height: 1.4;
-    letter-spacing: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-img {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+    display: block;
   }
 
   nav {
@@ -1213,7 +1216,9 @@
 
 <!-- HEADER -->
 <header>
-  <div class="logo">KOREAN<br>MANNER<br>QUIZ</div>
+  <div class="logo">
+    <img src="Logo.png" alt="Must-Know Korean Manner Quiz" class="logo-img">
+  </div>
   <nav>
     <button class="nav-btn active" onclick="smoothScroll('quiz')">Quiz</button>
     <button class="nav-btn" onclick="smoothScroll('about')">About Quiz</button>
