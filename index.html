@@ -346,7 +346,7 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    padding: 20px 16px 24px;
+    padding: 44px 16px 32px;
     background: linear-gradient(to top, rgba(10,10,20,0.88) 50%, transparent 100%);
   }
 
@@ -362,7 +362,7 @@
 
   .start-sub {
     font-family: 'Silkscreen', monospace;
-    font-size: 10px;
+    font-size: 20px;
     color: #fff;
     letter-spacing: 1px;
     text-align: center;
@@ -485,7 +485,7 @@
 
   .question-text {
     font-family: 'Handjet', sans-serif;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--dark);
     text-align: center;
@@ -1030,22 +1030,91 @@
   /* ============ SHARE SECTION ============ */
   .share-section {
     padding: 6rem 2rem;
-    background: var(--pink);
+    background: #a8e63d;
     position: relative;
     overflow: hidden;
     text-align: center;
   }
 
+  /* 방사형 버스트 — 형광 연두 */
   .share-section::before {
     content: '';
     position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg,
+      #d4ff5e 0deg, #8fd400 10deg,
+      #d4ff5e 20deg, #8fd400 30deg,
+      #d4ff5e 40deg, #8fd400 50deg,
+      #d4ff5e 60deg, #8fd400 70deg,
+      #d4ff5e 80deg, #8fd400 90deg,
+      #d4ff5e 100deg, #8fd400 110deg,
+      #d4ff5e 120deg, #8fd400 130deg,
+      #d4ff5e 140deg, #8fd400 150deg,
+      #d4ff5e 160deg, #8fd400 170deg,
+      #d4ff5e 180deg, #8fd400 190deg,
+      #d4ff5e 200deg, #8fd400 210deg,
+      #d4ff5e 220deg, #8fd400 230deg,
+      #d4ff5e 240deg, #8fd400 250deg,
+      #d4ff5e 260deg, #8fd400 270deg,
+      #d4ff5e 280deg, #8fd400 290deg,
+      #d4ff5e 300deg, #8fd400 310deg,
+      #d4ff5e 320deg, #8fd400 330deg,
+      #d4ff5e 340deg, #8fd400 350deg,
+      #d4ff5e 360deg
+    );
+    animation: rotateBurst 20s linear infinite;
+  }
+
+  /* 반투명 원형 오버레이 */
+  .share-section::after {
+    content: '';
+    position: absolute;
     inset: 0;
-    background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.1) 20px, rgba(255,255,255,0.1) 40px);
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(212,255,94,0.5) 0%, transparent 70%),
+      radial-gradient(circle 120px at 20% 30%, rgba(143,212,0,0.25) 0%, transparent 70%),
+      radial-gradient(circle 80px at 80% 70%, rgba(143,212,0,0.2) 0%, transparent 70%),
+      radial-gradient(circle 60px at 70% 20%, rgba(212,255,94,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  @keyframes rotateBurst {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* 할프톤 도트 레이어 */
+  .share-section .share-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(100,180,0,0.3) 2px, transparent 2px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* 별 장식 */
+  .share-star {
+    position: absolute;
+    color: #6ab300;
+    font-size: 28px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.7;
+    animation: starPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes starPulse {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+    50% { transform: scale(1.15) rotate(20deg); opacity: 1; }
   }
 
   .share-inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   .share-title {
@@ -1163,9 +1232,181 @@
     box-shadow: 4px 4px 0 var(--dark);
   }
 
-  .result-btn-primary { background: var(--yellow); color: var(--dark); }
-  .result-btn-secondary { background: var(--cyan); color: var(--dark); }
-  .result-btn-tertiary { background: var(--pink); color: var(--dark); }
+  .result-btn-manners { background: #E1FF46; color: var(--dark); border-color: var(--dark); }
+  .result-btn-primary   { background: var(--yellow); color: var(--dark); }
+  .result-btn-secondary { background: #FE52A2; color: #fff; }
+  .result-btn-tertiary  { background: #C0FFFF; color: var(--dark); }
+
+  /* QUIZ MODAL */
+  .quiz-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,0.88);
+    z-index: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .quiz-modal-overlay.open { display: flex; }
+
+  .quiz-modal-inner {
+    background: var(--dark);
+    border: 4px solid var(--yellow);
+    box-shadow: 8px 8px 0 var(--yellow);
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quiz-modal-close {
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid var(--yellow);
+    color: var(--yellow);
+    padding: 10px 16px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-align: right;
+    width: 100%;
+  }
+  .quiz-modal-close:hover { background: var(--yellow); color: var(--dark); }
+
+  .quiz-modal-content {
+    flex: 1;
+  }
+
+  /* K-MANNERS MODAL */
+  .kmanners-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,0.85);
+    z-index: 600;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 2rem 1rem;
+  }
+  .kmanners-modal-overlay.open { display: flex; }
+
+  .kmanners-modal {
+    background: var(--dark);
+    border: 4px solid var(--yellow);
+    box-shadow: 8px 8px 0 var(--yellow);
+    width: 100%;
+    max-width: 600px;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .kmanners-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--yellow);
+    padding-bottom: 12px;
+  }
+
+  .kmanners-modal-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--yellow);
+    line-height: 1.6;
+  }
+
+  .kmanners-modal-close {
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    background: transparent;
+    border: 2px solid #aaa;
+    color: #aaa;
+    padding: 6px 12px;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .kmanners-modal-close:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  .kmanners-card {
+    background: var(--bg);
+    border: 3px solid var(--yellow);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    overflow: hidden;
+  }
+  .kmanners-card:nth-child(2n) { border-color: var(--cyan); }
+  .kmanners-card:nth-child(3n) { border-color: var(--pink); }
+
+  .kmanners-card-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 13px;
+    color: var(--dark);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .kmanners-card-title::after {
+    content: '▼';
+    font-size: 9px;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+
+  .kmanners-card.open .kmanners-card-title::after {
+    transform: rotate(180deg);
+  }
+
+  .kmanners-card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .kmanners-card.open .kmanners-card-body {
+    max-height: 600px;
+  }
+
+  .kmanners-card-body ul {
+    list-style: none;
+    padding: 0 16px 14px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 10px;
+  }
+
+  .kmanners-card-body li {
+    font-family: 'Handjet', sans-serif;
+    font-size: 15px;
+    color: #222;
+    line-height: 1.5;
+  }
+
+  /* ETIQUETTE CARD — 내용 항상 표시 */
+  .etiquette-card {
+    cursor: default;
+    transition: box-shadow 0.2s;
+    aspect-ratio: unset;
+    min-height: 0;
+    height: auto;
+  }
+  .etiquette-card .etiquette-list {
+    overflow: visible;
+    max-height: none;
+  }
 
   /* PIXEL ART STARS */
   .pixel-stars {
@@ -1431,7 +1672,6 @@
                 <!-- 하단 버튼 오버레이 -->
                 <div class="start-overlay">
                   <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
-                  <div class="start-sub blink" style="margin-top:6px;" id="screen-blink">PRESS START →</div>
                 </div>
               </div>
 
@@ -1465,6 +1705,7 @@
                   <button class="result-btn result-btn-primary" onclick="restartQuiz()">↩ TRY AGAIN</button>
                   <button class="result-btn result-btn-secondary" onclick="shareResult()">↗ SHARE RESULT</button>
                   <button class="result-btn result-btn-tertiary" onclick="copyLink()">⎘ COPY LINK</button>
+                  <button class="result-btn result-btn-manners" onclick="openKMannersModal()">🇰🇷 MORE K-MANNERS</button>
                 </div>
               </div>
             </div>
@@ -1489,12 +1730,22 @@
 
 <!-- SECTION 3: SHARE -->
 <section id="share" class="share-section">
+  <!-- 할프톤 도트 -->
+  <div class="share-dots"></div>
+  <!-- 별 장식 -->
+  <span class="share-star" style="top:10%;left:8%;animation-delay:0s;font-size:36px;">★</span>
+  <span class="share-star" style="top:20%;left:85%;animation-delay:0.6s;font-size:24px;">★</span>
+  <span class="share-star" style="top:70%;left:12%;animation-delay:1.2s;font-size:20px;">★</span>
+  <span class="share-star" style="top:75%;left:80%;animation-delay:0.3s;font-size:32px;">★</span>
+  <span class="share-star" style="top:45%;left:5%;animation-delay:0.9s;font-size:16px;">★</span>
+  <span class="share-star" style="top:55%;left:90%;animation-delay:1.5s;font-size:22px;">★</span>
+  <span class="share-star" style="top:85%;left:50%;animation-delay:0.7s;font-size:18px;">★</span>
   <div class="share-inner reveal">
     <h2 class="share-title">CHALLENGE<br>YOUR FRIENDS!</h2>
     <p class="share-sub">Think they know Korean manners better than you? 👾</p>
     <div class="share-buttons">
-      <button class="share-btn share-btn-primary" onclick="shareResult()">
-        <span>↗</span> SHARE QUIZ
+      <button class="share-btn share-btn-primary" onclick="smoothScroll('quiz'); setTimeout(startQuiz, 600);">
+        <span>▶</span> START QUIZ
       </button>
       <button class="share-btn share-btn-secondary" onclick="copyLink()">
         <span>⎘</span> COPY LINK
@@ -1539,6 +1790,25 @@
       </button>
     </div>
     <button class="share-modal-close" onclick="closeShareModal()">✕ CLOSE</button>
+  </div>
+</div>
+
+<!-- QUIZ MODAL -->
+<div class="quiz-modal-overlay" id="quiz-modal" onclick="closeQuizModal(event)">
+  <div class="quiz-modal-inner">
+    <button class="quiz-modal-close" onclick="closeQuizModal()">✕ CLOSE</button>
+    <div class="quiz-modal-content" id="quiz-modal-content"></div>
+  </div>
+</div>
+
+<!-- K-MANNERS MODAL -->
+<div class="kmanners-modal-overlay" id="kmanners-modal" onclick="closeKMannersModal(event)">
+  <div class="kmanners-modal">
+    <div class="kmanners-modal-header">
+      <div class="kmanners-modal-title">🇰🇷 MORE K-MANNERS</div>
+      <button class="kmanners-modal-close" onclick="closeKMannersModal()">✕ CLOSE</button>
+    </div>
+    <div id="kmanners-modal-body"></div>
   </div>
 </div>
 
@@ -2005,6 +2275,53 @@ function copyLink() {
   });
 }
 
+function openQuizModal() {
+  // 퀴즈 섹션 콘텐츠를 모달에 복사해서 표시
+  const quizSection = document.querySelector('.gameboy-device');
+  const modalContent = document.getElementById('quiz-modal-content');
+  if (quizSection && modalContent) {
+    modalContent.innerHTML = '';
+    const clone = quizSection.cloneNode(true);
+    // 클론 내 버튼 이벤트 재연결
+    const startBtn = clone.querySelector('#main-cta');
+    if (startBtn) startBtn.onclick = () => { closeQuizModal(); startQuiz(); smoothScroll('quiz'); };
+    modalContent.appendChild(clone);
+  }
+  document.getElementById('quiz-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeQuizModal(e) {
+  if (!e || e.target === document.getElementById('quiz-modal')) {
+    document.getElementById('quiz-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function openKMannersModal() {
+  const body = document.getElementById('kmanners-modal-body');
+  const cards = etiquetteData[lang] || etiquetteData.en;
+  const colors = ['var(--yellow)', 'var(--cyan)', 'var(--pink)'];
+  body.innerHTML = cards.map((card, i) => `
+    <div class="kmanners-card" onclick="toggleKMannersCard(this)" style="border-color:${colors[i%3]}">
+      <div class="kmanners-card-title">${card.title}</div>
+      <div class="kmanners-card-body">
+        <ul>${card.items.map(it => `<li>${it}</li>`).join('')}</ul>
+      </div>
+    </div>`).join('');
+  document.getElementById('kmanners-modal').classList.add('open');
+}
+
+function toggleKMannersCard(el) {
+  el.classList.toggle('open');
+}
+
+function closeKMannersModal(e) {
+  if (!e || e.target === document.getElementById('kmanners-modal')) {
+    document.getElementById('kmanners-modal').classList.remove('open');
+  }
+}
+
 function shareResult() { openShareModal(); }
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -2028,7 +2345,15 @@ function createStars() {
   }
 }
 createStars();
-renderEtiquetteCards('en');
+
+// DOM 로드 완료 후 실행
+document.addEventListener('DOMContentLoaded', () => {
+  renderEtiquetteCards('en');
+});
+// 이미 로드된 경우 즉시 실행
+if (document.readyState !== 'loading') {
+  renderEtiquetteCards('en');
+}
 
 // SCROLL EFFECTS
 const observer = new IntersectionObserver((entries) => {
