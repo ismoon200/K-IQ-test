@@ -486,7 +486,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     flex: 1;
     overflow-y: auto;
     box-sizing: border-box;
-  }  .progress-bar-wrap {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .result-screen::-webkit-scrollbar { display: none; }  .progress-bar-wrap {
     display: flex;
     align-items: center;
     gap: 6px;
