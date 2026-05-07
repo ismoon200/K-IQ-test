@@ -6,7 +6,7 @@
 <title>Must-Know Korean Manner Quiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Handjet&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Handjet&family=Silkscreen:wght@400;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --yellow: #E1FF46;
@@ -126,31 +126,74 @@
     width: 100%;
   }
 
+  /* PILL TOGGLE */
   .lang-toggle {
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .lang-toggle-track {
+    position: relative;
+    width: 72px;
+    height: 32px;
+    background: #1a1a2e;
+    border-radius: 999px;
+    border: 2px solid #555;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 3px rgba(0,0,0,0.4);
     display: flex;
     align-items: center;
-    background: var(--darker);
-    border: 2px solid var(--cyan);
-    border-radius: 0;
+    transition: background 0.3s;
     overflow: hidden;
-    flex-shrink: 0;
   }
+
+  .lang-toggle-track.ms-active {
+    background: #2a2a1e;
+  }
+
+  .lang-toggle-thumb {
+    position: absolute;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffffff, #cccccc);
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.8);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+  }
+
+  .lang-toggle-track.ms-active .lang-toggle-thumb {
+    left: calc(100% - 28px);
+  }
+
+  .lang-label {
+    position: absolute;
+    font-family: 'Silkscreen', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    z-index: 1;
+    transition: opacity 0.2s;
+  }
+
+  .lang-label-en {
+    right: 7px;
+    color: var(--cyan);
+    opacity: 1;
+  }
+
+  .lang-label-ms {
+    left: 7px;
+    color: var(--yellow);
+    opacity: 0;
+  }
+
+  .lang-toggle-track.ms-active .lang-label-en { opacity: 0; }
+  .lang-toggle-track.ms-active .lang-label-ms { opacity: 1; }
 
   .lang-toggle button {
-    font-family: 'Silkscreen', monospace;
-    font-size: 9px;
-    padding: 6px 10px;
-    background: transparent;
-    border: none;
-    color: var(--cyan);
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.1s;
-  }
-
-  .lang-toggle button.active {
-    background: var(--cyan);
-    color: var(--dark);
+    display: none;
   }
 
   /* ============ GAMEBOY WRAPPER ============ */
@@ -1007,7 +1050,7 @@
   }
 
   .etiquette-list li {
-    font-family: 'Handjet', sans-serif;
+    font-family: 'Google Sans', 'Product Sans', 'DM Sans', sans-serif;
     font-size: 15px;
     color: #000;
     line-height: 1.5;
@@ -1036,61 +1079,11 @@
     text-align: center;
   }
 
-  /* 방사형 버스트 — 형광 연두 */
-  .share-section::before {
-    content: '';
-    position: absolute;
-    inset: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(
-      from 0deg,
-      #d4ff5e 0deg, #8fd400 10deg,
-      #d4ff5e 20deg, #8fd400 30deg,
-      #d4ff5e 40deg, #8fd400 50deg,
-      #d4ff5e 60deg, #8fd400 70deg,
-      #d4ff5e 80deg, #8fd400 90deg,
-      #d4ff5e 100deg, #8fd400 110deg,
-      #d4ff5e 120deg, #8fd400 130deg,
-      #d4ff5e 140deg, #8fd400 150deg,
-      #d4ff5e 160deg, #8fd400 170deg,
-      #d4ff5e 180deg, #8fd400 190deg,
-      #d4ff5e 200deg, #8fd400 210deg,
-      #d4ff5e 220deg, #8fd400 230deg,
-      #d4ff5e 240deg, #8fd400 250deg,
-      #d4ff5e 260deg, #8fd400 270deg,
-      #d4ff5e 280deg, #8fd400 290deg,
-      #d4ff5e 300deg, #8fd400 310deg,
-      #d4ff5e 320deg, #8fd400 330deg,
-      #d4ff5e 340deg, #8fd400 350deg,
-      #d4ff5e 360deg
-    );
-    animation: rotateBurst 20s linear infinite;
-  }
-
-  /* 반투명 원형 오버레이 */
-  .share-section::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(212,255,94,0.5) 0%, transparent 70%),
-      radial-gradient(circle 120px at 20% 30%, rgba(143,212,0,0.25) 0%, transparent 70%),
-      radial-gradient(circle 80px at 80% 70%, rgba(143,212,0,0.2) 0%, transparent 70%),
-      radial-gradient(circle 60px at 70% 20%, rgba(212,255,94,0.3) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  @keyframes rotateBurst {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
   /* 할프톤 도트 레이어 */
   .share-section .share-dots {
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle, rgba(100,180,0,0.3) 2px, transparent 2px);
+    background-image: radial-gradient(circle, rgba(100,180,0,0.35) 2px, transparent 2px);
     background-size: 28px 28px;
     pointer-events: none;
     z-index: 0;
@@ -1103,12 +1096,12 @@
     font-size: 28px;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.7;
+    opacity: 0.75;
     animation: starPulse 3s ease-in-out infinite;
   }
 
   @keyframes starPulse {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.75; }
     50% { transform: scale(1.15) rotate(20deg); opacity: 1; }
   }
 
@@ -1163,8 +1156,8 @@
   }
 
   .share-btn-primary {
-    background: var(--yellow);
-    color: var(--dark);
+    background: #FE52A2;
+    color: #fff;
   }
 
   .share-btn-secondary {
@@ -1232,8 +1225,8 @@
     box-shadow: 4px 4px 0 var(--dark);
   }
 
-  .result-btn-manners { background: #E1FF46; color: var(--dark); border-color: var(--dark); }
-  .result-btn-primary   { background: var(--yellow); color: var(--dark); }
+  .result-btn-manners { background: #d0d0d0; color: #444; border-color: #aaa; }
+  .result-btn-primary   { background: #d0d0d0; color: #444; border-color: #aaa; }
   .result-btn-secondary { background: #FE52A2; color: #fff; }
   .result-btn-tertiary  { background: #C0FFFF; color: var(--dark); }
 
@@ -1467,11 +1460,10 @@
     .logo-img { height: 32px; }
 
     /* 언어토글 1행 우측 고정 */
-    .lang-toggle {
-      flex-shrink: 0;
-      margin-left: auto;
-    }
-    .lang-toggle button { font-size: 9px; padding: 5px 8px; }
+    .lang-toggle { flex-shrink: 0; }
+    .lang-toggle-track { width: 60px; height: 28px; }
+    .lang-toggle-thumb { width: 22px; height: 22px; }
+    .lang-toggle-track.ms-active .lang-toggle-thumb { left: calc(100% - 24px); }
 
     /* 2행: GNB */
     nav {
@@ -1493,7 +1485,9 @@
 
   @media (max-width: 360px) {
     .logo-img { height: 26px; }
-    .lang-toggle button { font-size: 8px; padding: 4px 6px; }
+    .lang-toggle-track { width: 54px; height: 26px; }
+    .lang-toggle-thumb { width: 20px; height: 20px; }
+    .lang-toggle-track.ms-active .lang-toggle-thumb { left: calc(100% - 22px); }
     .nav-btn { font-size: 9px; }
     nav { gap: 8px; }
   }
@@ -1617,9 +1611,12 @@
     <div class="logo">
       <img src="Logo.png" alt="Must-Know Korean Manner Quiz" class="logo-img">
     </div>
-    <div class="lang-toggle">
-      <button class="active" onclick="setLang('en')">EN</button>
-      <button onclick="setLang('ms')">BM</button>
+    <div class="lang-toggle" id="lang-toggle-btn">
+      <div class="lang-toggle-track" id="lang-track">
+        <div class="lang-toggle-thumb" id="lang-thumb"></div>
+        <span class="lang-label lang-label-en" id="lang-label-en">EN</span>
+        <span class="lang-label lang-label-ms" id="lang-label-ms">BM</span>
+      </div>
     </div>
   </div>
   <nav>
@@ -1702,10 +1699,10 @@
                 <div class="result-grade" id="result-grade">BEST!</div>
                 <div class="result-msg" id="result-msg">You're a Korean manner pro!</div>
                 <div class="result-actions">
-                  <button class="result-btn result-btn-primary" onclick="restartQuiz()">↩ TRY AGAIN</button>
                   <button class="result-btn result-btn-secondary" onclick="shareResult()">↗ SHARE RESULT</button>
                   <button class="result-btn result-btn-tertiary" onclick="copyLink()">⎘ COPY LINK</button>
                   <button class="result-btn result-btn-manners" onclick="openKMannersModal()">🇰🇷 MORE K-MANNERS</button>
+                  <button class="result-btn result-btn-primary" onclick="restartQuiz()">↩ TRY AGAIN</button>
                 </div>
               </div>
             </div>
@@ -1721,7 +1718,6 @@
   <div class="section-header reveal">
     <span class="section-num" style="display:none">— SECTION 02 —</span>
     <h2 class="section-title">LEARN MORE</h2>
-    <p class="section-drag-hint">← drag to explore →</p>
   </div>
   <div class="etiquette-slider-wrap">
     <div class="etiquette-slider" id="etiquette-slider"></div>
@@ -1730,9 +1726,7 @@
 
 <!-- SECTION 3: SHARE -->
 <section id="share" class="share-section">
-  <!-- 할프톤 도트 -->
   <div class="share-dots"></div>
-  <!-- 별 장식 -->
   <span class="share-star" style="top:10%;left:8%;animation-delay:0s;font-size:36px;">★</span>
   <span class="share-star" style="top:20%;left:85%;animation-delay:0.6s;font-size:24px;">★</span>
   <span class="share-star" style="top:70%;left:12%;animation-delay:1.2s;font-size:20px;">★</span>
@@ -1747,8 +1741,8 @@
       <button class="share-btn share-btn-primary" onclick="smoothScroll('quiz'); setTimeout(startQuiz, 600);">
         <span>▶</span> START QUIZ
       </button>
-      <button class="share-btn share-btn-secondary" onclick="copyLink()">
-        <span>⎘</span> COPY LINK
+      <button class="share-btn share-btn-secondary" onclick="openSectionShareModal()">
+        <span>↗</span> SHARE QUIZ
       </button>
     </div>
   </div>
@@ -2034,6 +2028,14 @@ let score = 0;
 let lang = 'en';
 let answered = false;
 
+// 토글 클릭 이벤트 — DOM 로드 후 바인딩
+function bindToggle() {
+  const btn = document.getElementById('lang-toggle-btn');
+  if (btn) btn.addEventListener('click', () => setLang(lang === 'en' ? 'ms' : 'en'));
+}
+document.addEventListener('DOMContentLoaded', bindToggle);
+if (document.readyState !== 'loading') bindToggle();
+
 const translations = {
   en: {
     tag: '★ 1 MIN. QUIZ ★',
@@ -2051,15 +2053,80 @@ const translations = {
   }
 };
 
+const uiText = {
+  en: {
+    navQuiz: 'Quiz', navLearn: 'Learn more', navShare: 'Share',
+    shareTitle: 'CHALLENGE<br>YOUR FRIENDS!',
+    shareSub: 'Think they know Korean manners better than you? 👾',
+    shareStartBtn: '▶ START QUIZ', shareCopyBtn: '⎘ COPY LINK',
+    footerText: '★ MUST-KNOW KOREAN MANNER QUIZ ★<br>© 2025 ALL RIGHTS RESERVED<br>PLAY · LEARN · SHARE',
+    resultTryAgain: '↩ TRY AGAIN', resultShare: '↗ SHARE RESULT',
+    resultCopy: '⎘ COPY LINK', resultManners: '🇰🇷 MORE K-MANNERS',
+    learnMore: 'LEARN MORE', dragHint: '← drag to explore →'
+  },
+  ms: {
+    navQuiz: 'Kuiz', navLearn: 'Ketahui Lebih', navShare: 'Kongsi',
+    shareTitle: 'CABAR<br>RAKAN ANDA!',
+    shareSub: 'Adakah mereka lebih tahu adab Korea daripada anda? 👾',
+    shareStartBtn: '▶ MULA KUIZ', shareCopyBtn: '⎘ SALIN PAUTAN',
+    footerText: '★ KUIZ ADAB KOREA MESTI TAHU ★<br>© 2025 HAK CIPTA TERPELIHARA<br>MAIN · BELAJAR · KONGSI',
+    resultTryAgain: '↩ CUBA LAGI', resultShare: '↗ KONGSI KEPUTUSAN',
+    resultCopy: '⎘ SALIN PAUTAN', resultManners: '🇰🇷 ADAB K LEBIH',
+    learnMore: 'KETAHUI LEBIH', dragHint: '← seret untuk terokai →'
+  }
+};
+
 function setLang(l) {
   lang = l;
-  document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
-  document.querySelector(`.lang-toggle button:${l === 'en' ? 'first' : 'last'}-child`).classList.add('active');
+  const isMs = l === 'ms';
+
+  // Toggle UI update
+  const track = document.getElementById('lang-track');
+  if (track) track.classList.toggle('ms-active', isMs);
+
+  // Start screen
   const t = translations[l];
-  document.getElementById('screen-title').innerHTML = t.screenTitle;
-  document.getElementById('screen-sub').textContent = t.screenSub;
-  document.getElementById('main-cta').textContent = t.cta;
-  document.getElementById('screen-blink').textContent = t.pressStart;
+  const titleEl = document.getElementById('screen-title');
+  const subEl = document.getElementById('screen-sub');
+  const ctaEl = document.getElementById('main-cta');
+  if (titleEl) titleEl.innerHTML = t.screenTitle;
+  if (subEl) subEl.textContent = t.screenSub;
+  if (ctaEl) ctaEl.textContent = t.cta;
+
+  // UI text
+  const ui = uiText[l];
+
+  // GNB
+  const navBtns = document.querySelectorAll('.nav-btn');
+  if (navBtns[0]) navBtns[0].textContent = ui.navQuiz;
+  if (navBtns[1]) navBtns[1].textContent = ui.navLearn;
+  if (navBtns[2]) navBtns[2].textContent = ui.navShare;
+
+  // Share section
+  const shareTitle = document.querySelector('.share-title');
+  const shareSub = document.querySelector('.share-sub');
+  const shareBtns = document.querySelectorAll('.share-btn');
+  if (shareTitle) shareTitle.innerHTML = ui.shareTitle;
+  if (shareSub) shareSub.textContent = ui.shareSub;
+  if (shareBtns[0]) shareBtns[0].querySelector('span').nextSibling.textContent = ' ' + (isMs ? 'MULA KUIZ' : 'START QUIZ');
+  if (shareBtns[1]) shareBtns[1].innerHTML = `<span>↗</span> ${isMs ? 'KONGSI KUIZ' : 'SHARE QUIZ'}`;
+
+  // Result buttons
+  const rBtns = document.querySelectorAll('.result-btn');
+  if (rBtns[0]) rBtns[0].textContent = ui.resultShare;
+  if (rBtns[1]) rBtns[1].textContent = ui.resultCopy;
+  if (rBtns[2]) rBtns[2].textContent = ui.resultManners;
+  if (rBtns[3]) rBtns[3].textContent = ui.resultTryAgain;
+
+  // Learn More section title
+  const learnTitle = document.querySelector('#about .section-title');
+  if (learnTitle) learnTitle.textContent = ui.learnMore;
+
+  // Footer
+  const footer = document.querySelector('footer p');
+  if (footer) footer.innerHTML = ui.footerText;
+
+  // Cards & quiz
   renderEtiquetteCards(l);
   if (currentQ > 0 && currentQ < quizData.length) renderQuestion();
 }
@@ -2193,6 +2260,60 @@ const SHARE_URL = window.location.href;
 function getShareText() {
   const grades = ['RETRY?','TRY HARDER','GOOD!','GREAT!','AMAZING!','BEST!'];
   return `🇰🇷 I scored ${score}/5 on the Must-Know Korean Manner Quiz! My grade: ${grades[score]} Can you beat me? Try it here:`;
+}
+
+const SECTION_SHARE_TEXT = '👽⭐Must Know Korean Manners before you land! play this Quiz and Check if You are ready for your trip to Korea!🇰🇷✈️';
+
+function openSectionShareModal() {
+  // 공유 모달을 열되, 텍스트를 섹션용 고정 메시지로 임시 교체
+  const overlay = document.getElementById('share-modal');
+  // 모달 내 소셜 버튼들의 onclick을 섹션 전용으로 재설정
+  const modalTitle = overlay.querySelector('.share-modal-title');
+  if (modalTitle) modalTitle.textContent = 'SHARE QUIZ';
+
+  // 각 버튼 onclick 임시 교체
+  const buttons = overlay.querySelectorAll('.share-social-btn');
+  buttons[0].onclick = () => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SECTION_SHARE_TEXT + ' ' + SHARE_URL)}`;
+    window.open(url, '_blank', 'noopener,width=600,height=400');
+  };
+  buttons[1].onclick = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}&quote=${encodeURIComponent(SECTION_SHARE_TEXT)}`;
+    window.open(url, '_blank', 'noopener,width=600,height=400');
+  };
+  buttons[2].onclick = () => {
+    const url = `https://wa.me/?text=${encodeURIComponent(SECTION_SHARE_TEXT + ' ' + SHARE_URL)}`;
+    window.open(url, '_blank', 'noopener');
+  };
+  buttons[3].onclick = () => {
+    const url = `https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SECTION_SHARE_TEXT)}`;
+    window.open(url, '_blank', 'noopener');
+  };
+  buttons[4].onclick = () => {
+    const text = SECTION_SHARE_TEXT + ' ' + SHARE_URL;
+    try { navigator.clipboard.writeText(text); } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    closeShareModal();
+    window.open('https://www.instagram.com/direct/new/', '_blank', 'noopener');
+    setTimeout(() => showToast('✓ TEXT COPIED! Paste it in Instagram DM'), 300);
+  };
+  buttons[5].onclick = () => {
+    navigator.clipboard.writeText(SECTION_SHARE_TEXT + ' ' + SHARE_URL)
+      .catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = SECTION_SHARE_TEXT + ' ' + SHARE_URL;
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      });
+    closeShareModal();
+    showToast('✓ LINK & MESSAGE COPIED!');
+  };
+
+  overlay.classList.add('open');
 }
 
 function openShareModal() {
