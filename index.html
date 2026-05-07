@@ -2063,8 +2063,8 @@ const quizData = [
     en: {
       q: 'Where can you stand on an escalator?',
       a: [
-        { id: 'q1-a', text: 'Left side', img: null },
-        { id: 'q1-b', text: 'Right side', img: null }
+        { id: 'q1-a', text: 'Left side', img: 'Q1_a.png' },
+        { id: 'q1-b', text: 'Right side', img: 'Q1_b.png' }
       ],
       correct: 1,
       feedback: 'In Korea, stand on the right so others can walk on the left!'
@@ -2072,8 +2072,8 @@ const quizData = [
     ms: {
       q: 'Di manakah anda sepatutnya berdiri di eskalator?',
       a: [
-        { id: 'q1-a', text: 'Sebelah kiri', img: null },
-        { id: 'q1-b', text: 'Sebelah kanan', img: null }
+        { id: 'q1-a', text: 'Sebelah kiri', img: 'Q1_a.png' },
+        { id: 'q1-b', text: 'Sebelah kanan', img: 'Q1_b.png' }
       ],
       correct: 1,
       feedback: 'Di Korea, berdiri di sebelah kanan supaya orang lain boleh berjalan di sebelah kiri!'
@@ -2085,8 +2085,8 @@ const quizData = [
     en: {
       q: 'After finishing your fast food…',
       a: [
-        { id: 'q2-a', text: 'Clean it up yourself', img: null },
-        { id: 'q2-b', text: 'Leave it on the table', img: null }
+        { id: 'q2-a', text: 'Clean it up yourself', img: 'Q2_a.png' },
+        { id: 'q2-b', text: 'Leave it on the table', img: 'Q2_b.png' }
       ],
       correct: 0,
       feedback: 'In Korea, you\'re expected to tidy your own tray after eating!'
@@ -2094,8 +2094,8 @@ const quizData = [
     ms: {
       q: 'Selepas makan di restoran makanan segera…',
       a: [
-        { id: 'q2-a', text: 'Bersihkan sendiri', img: null },
-        { id: 'q2-b', text: 'Tinggalkan di atas meja', img: null }
+        { id: 'q2-a', text: 'Bersihkan sendiri', img: 'Q2_a.png' },
+        { id: 'q2-b', text: 'Tinggalkan di atas meja', img: 'Q2_b.png' }
       ],
       correct: 0,
       feedback: 'Di Korea, anda perlu mengemas dulang sendiri selepas makan!'
@@ -2107,8 +2107,8 @@ const quizData = [
     en: {
       q: 'If you leave your bag at a cafe...',
       a: [
-        { id: 'q3-a', text: 'Stolen', img: null },
-        { id: 'q3-b', text: 'Nothing happens', img: null }
+        { id: 'q3-a', text: 'Stolen', img: 'Q3_a.png' },
+        { id: 'q3-b', text: 'Nothing happens', img: 'Q3_b.png' }
       ],
       correct: 1,
       feedback: 'Korea is very safe! Leaving your bag is a common way to reserve a seat.'
@@ -2116,8 +2116,8 @@ const quizData = [
     ms: {
       q: 'Jika anda meninggalkan beg di kafe…',
       a: [
-        { id: 'q3-a', text: 'Akan dicuri', img: null },
-        { id: 'q3-b', text: 'Tiada apa-apa yang berlaku', img: null }
+        { id: 'q3-a', text: 'Akan dicuri', img: 'Q3_a.png' },
+        { id: 'q3-b', text: 'Tiada apa-apa yang berlaku', img: 'Q3_b.png' }
       ],
       correct: 1,
       feedback: 'Korea sangat selamat! Meninggalkan beg adalah cara biasa untuk tempah tempat duduk.'
@@ -2295,10 +2295,15 @@ function renderQuestion() {
   document.getElementById('prog-label').textContent = `${currentQ+1}/${total}`;
   document.getElementById('prog-fill').style.width = `${((currentQ+1)/total)*100}%`;
   document.getElementById('q-count').textContent = `Q ${currentQ+1}/${total}`;
-  document.getElementById('q-text').textContent = d.q;
+
+  // 질문 텍스트 — 고유 data-qid 속성 부여
+  const qTextEl = document.getElementById('q-text');
+  qTextEl.textContent = d.q;
+  qTextEl.setAttribute('data-qid', `q${currentQ+1}-${lang}`);
 
   // 문제 이미지 슬롯
   const qImgSlot = document.getElementById('q-img-slot');
+  qImgSlot.setAttribute('data-qid', `q${currentQ+1}-img`);
   if (q.img) {
     qImgSlot.innerHTML = `<img src="${q.img}" alt="question image">`;
     qImgSlot.style.display = 'flex';
@@ -2307,26 +2312,30 @@ function renderQuestion() {
     qImgSlot.style.display = 'flex';
   }
 
-  // 카드 2열 선지 렌더링
+  // 카드 2열 선지 렌더링 — 고유 id: q{번호}-{언어}-{순서}
   const grid = document.getElementById('choices');
   grid.innerHTML = '';
   d.a.forEach((ans, i) => {
     const card = document.createElement('button');
     card.className = 'choice-card';
-    card.id = ans.id;
+    card.id = `q${currentQ+1}-${lang}-${i}`;
+    card.setAttribute('data-choice', `${currentQ+1}-${i}`);
 
     const num = document.createElement('div');
     num.className = 'choice-num';
+    num.id = `choice-num-q${currentQ+1}-${i}`;
     num.textContent = i + 1;
 
     const imgWrap = document.createElement('div');
     imgWrap.className = 'choice-card-img';
+    imgWrap.id = `choice-img-q${currentQ+1}-${i}`;
     imgWrap.innerHTML = ans.img
       ? `<img src="${ans.img}" alt="choice image">`
       : `<span class="img-placeholder">IMG<br>SLOT</span>`;
 
     const label = document.createElement('div');
     label.className = 'choice-card-label';
+    label.id = `choice-label-q${currentQ+1}-${lang}-${i}`;
     label.textContent = ans.text;
 
     card.appendChild(num);
