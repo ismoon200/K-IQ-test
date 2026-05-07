@@ -418,14 +418,20 @@
        0    0 16px rgba(255,255,255,0.5);
   }
 
-  /* 워킹 외계인 GIF */
+  /* 워킹 외계인 + 버튼 묶음 */
+  .cta-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
   .walking-alien {
-    height: 64px;
+    height: 80px;
     width: auto;
     object-fit: contain;
     image-rendering: pixelated;
     display: block;
-    margin: 0 auto;
   }
 
   /* 버튼 플로팅 */
@@ -1764,8 +1770,10 @@
                 </div>
                 <!-- 하단 버튼 오버레이 -->
                 <div class="start-overlay">
-                  <img src="Walking_anime.gif" class="walking-alien" alt="alien">
-                  <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
+                  <div class="cta-wrap">
+                    <img src="Walking_anime.gif" class="walking-alien" alt="alien">
+                    <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
+                  </div>
                 </div>
               </div>
 
