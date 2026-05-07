@@ -288,7 +288,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     background: var(--bg);
     border-radius: 12px;
     flex: 1;
-    min-height: 0;
     border: 3px solid #1a1a2e;
     overflow: hidden;
     position: relative;
@@ -305,11 +304,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     padding: 16px 12px;
     text-align: center;
     flex: 1;
-    min-height: 0;
-    overflow-y: scroll;
-    overscroll-behavior: contain;
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
     box-sizing: border-box;
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -770,15 +765,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   /* RESULT SCREEN */
   .result-card-img {
-    width: 100%;
-    max-width: 260px;
-    margin: 0 auto 12px;
-    display: block;
-    border-radius: 16px;
-    border: 3px solid #bbb;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    object-fit: cover;
-    flex-shrink: 0;
+    display: none; /* 결과 화면에서는 숨김 — 모달에서만 표시 */
   }
 
   .result-score {
@@ -1320,7 +1307,79 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     box-shadow: 4px 4px 0 var(--dark);
   }
 
-  .result-btn-manners { background: #EAFDDC; color: #000; border-color: #aaa; }
+  .result-btn-reward { background: #E1FF46; color: #000; border-color: var(--dark); }
+
+  /* REWARD MODAL */
+  .reward-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,0.9);
+    z-index: 800;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .reward-modal-overlay.open { display: flex; }
+
+  .reward-modal {
+    background: var(--dark);
+    border: 4px solid var(--yellow);
+    box-shadow: 8px 8px 0 var(--yellow);
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px;
+    gap: 16px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .reward-modal::-webkit-scrollbar { display: none; }
+
+  .reward-modal-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--yellow);
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 1px;
+  }
+
+  .reward-modal-img {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 16px;
+    border: 3px solid #bbb;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    display: block;
+    object-fit: cover;
+  }
+
+  .reward-modal-msg {
+    font-family: 'Handjet', sans-serif;
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+    line-height: 1.5;
+    padding: 0 8px;
+  }
+
+  .reward-modal-close {
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    background: transparent;
+    border: 2px solid #aaa;
+    color: #aaa;
+    padding: 8px 20px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    width: 100%;
+  }
+  .reward-modal-close:hover { border-color: var(--yellow); color: var(--yellow); }
   .result-btn-primary   { background: #d0d0d0; color: #000; border-color: #aaa; }
   .result-btn-tertiary  { background: #C0FFFF; color: var(--dark); }
 
@@ -1839,6 +1898,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="result-actions">
                   <button class="result-btn result-btn-secondary" onclick="shareResult()">↗ SHARE RESULT</button>
                   <button class="result-btn result-btn-tertiary" onclick="copyLink()">⎘ COPY LINK</button>
+                  <button class="result-btn result-btn-reward" onclick="openRewardModal()">🎖️ SHOW REWARD</button>
                   <button class="result-btn result-btn-manners" onclick="openKMannersModal()">🇰🇷 MORE K-MANNERS</button>
                   <button class="result-btn result-btn-primary" onclick="restartQuiz()">↩ TRY AGAIN</button>
                 </div>
@@ -1970,6 +2030,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <!-- SECTION SHARE MODAL END -->
+<!-- REWARD MODAL -->
+<div class="reward-modal-overlay" id="reward-modal" onclick="closeRewardModal(event)">
+  <div class="reward-modal">
+    <div class="reward-modal-title">🎖️ DOWNLOAD YOUR GAME CD<br>AND SHARE!</div>
+    <img class="reward-modal-img" id="reward-modal-img" src="5_5.png" alt="reward card">
+    <div class="reward-modal-msg" id="reward-modal-msg"></div>
+    <button class="reward-modal-close" onclick="closeRewardModal()">✕ CLOSE</button>
+  </div>
+</div>
+
 <!-- K-MANNERS MODAL -->
 <div class="kmanners-modal-overlay" id="kmanners-modal" onclick="closeKMannersModal(event)">
   <div class="kmanners-modal">
@@ -2443,6 +2513,9 @@ function showResult() {
   const cardImgs = ['0_5.png', '1_5.png', '2_5.png', '3_5.png', '4_5.png', '5_5.png'];
   document.getElementById('result-card-img').src = cardImgs[score];
 
+  // 결과 화면 진입 시 Reward 모달 자동 표시
+  setTimeout(() => openRewardModal(), 300);
+
     // ─── GTM / TikTok 전환 이벤트 (세션 당 1회만) ───────────────────────
   if (!sessionStorage.getItem('quiz_converted')) {
     sessionStorage.setItem('quiz_converted', '1');
@@ -2632,6 +2705,29 @@ function openQuizModal() {
 function closeQuizModal(e) {
   if (!e || e.target === document.getElementById('quiz-modal')) {
     document.getElementById('quiz-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function openRewardModal() {
+  const cardImgs = ['0_5.png','1_5.png','2_5.png','3_5.png','4_5.png','5_5.png'];
+  const msgs = [
+    'Time to study Korean manners! 😅',
+    'You know a little! Keep learning 🌱',
+    'Not bad! Korea is Waiting for you! ✈️',
+    'Impressive! You\'ll fit right in 🎉',
+    'Almost perfect! Korea loves you 🇰🇷',
+    'You\'re a Korean manner master! 👑'
+  ];
+  document.getElementById('reward-modal-img').src = cardImgs[score];
+  document.getElementById('reward-modal-msg').textContent = msgs[score];
+  document.getElementById('reward-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRewardModal(e) {
+  if (!e || e.target === document.getElementById('reward-modal')) {
+    document.getElementById('reward-modal').classList.remove('open');
     document.body.style.overflow = '';
   }
 }
@@ -2856,29 +2952,6 @@ function fixQuizPadding() {
 }
 window.addEventListener('load', fixQuizPadding);
 window.addEventListener('resize', fixQuizPadding);
-
-// RESULT SCREEN 터치 스크롤 격리
-(function() {
-  document.addEventListener('touchmove', function(e) {
-    const rs = document.getElementById('result-screen');
-    if (!rs || rs.style.display === 'none') return;
-    // 터치가 result-screen 안에서 일어났는지 확인
-    if (rs.contains(e.target)) {
-      e.stopPropagation();
-      // 스크롤 한계에서만 preventDefault
-      const atTop = rs.scrollTop <= 0;
-      const atBottom = rs.scrollTop + rs.clientHeight >= rs.scrollHeight - 1;
-      const dy = e.touches[0].clientY - (e._startY || e.touches[0].clientY);
-      if ((atTop && dy > 0) || (atBottom && dy < 0)) {
-        e.preventDefault();
-      }
-    }
-  }, { passive: false });
-
-  document.addEventListener('touchstart', function(e) {
-    e._startY = e.touches[0].clientY;
-  }, { passive: true });
-})();
 
 // SMOOTH SCROLL
 function smoothScroll(id) {
