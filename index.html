@@ -390,7 +390,7 @@
     align-items: center;
     gap: 8px;
     padding: 44px 16px 32px;
-    background: linear-gradient(to top, rgba(10,10,20,0.88) 50%, transparent 100%);
+    background: transparent;
   }
 
   .start-title {
@@ -413,13 +413,25 @@
       -1px -1px 0 #000,
        1px -1px 0 #000,
       -1px  1px 0 #000,
-       1px  1px 0 #000;
+       1px  1px 0 #000,
+       0    0  8px rgba(255,255,255,0.9),
+       0    0 16px rgba(255,255,255,0.5);
+  }
+
+  /* 워킹 외계인 GIF */
+  .walking-alien {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+    image-rendering: pixelated;
+    display: block;
+    margin: 0 auto;
   }
 
   /* 버튼 플로팅 */
   @keyframes btnFloat {
-    0%, 100% { transform: translateY(0); box-shadow: 4px 4px 0 var(--dark); }
-    50%       { transform: translateY(-3px); box-shadow: 4px 7px 0 var(--dark); }
+    0%, 100% { transform: translateY(0);   box-shadow: 4px 4px 0 var(--dark); }
+    50%       { transform: translateY(-5px); box-shadow: 4px 9px 0 var(--dark); }
   }
 
   .blink {
@@ -1545,7 +1557,7 @@
     .lang-toggle-track.ms-active .lang-toggle-thumb { left: calc(100% - 24px); }
 
     /* 섹션 상하 여백 30px로 축소 */
-    .gameboy-section  { padding-top: 120px; padding-bottom: 40px; }
+    .gameboy-section  { padding-top: 120px; padding-bottom: 20px; }
     .about-section    { padding-top: 30px; padding-bottom: 30px; }
     .share-section    { padding-top: 30px; padding-bottom: 30px; }
 
@@ -1752,6 +1764,7 @@
                 </div>
                 <!-- 하단 버튼 오버레이 -->
                 <div class="start-overlay">
+                  <img src="Walking_anime.gif" class="walking-alien" alt="alien">
                   <button class="screen-cta-btn" onclick="startQuiz()" id="main-cta">▶ START QUIZ</button>
                 </div>
               </div>
@@ -2034,7 +2047,7 @@ function renderEtiquetteCards(l) {
 const quizData = [
   {
     icon: '🚶',
-    img: null,
+    img: 'Q1_Q.gif',
     en: {
       q: 'Where can you stand on an escalator?',
       a: [
