@@ -2424,6 +2424,29 @@ function showResult() {
   const badge = document.getElementById('result-badge');
   badge.querySelector('rect:first-child').setAttribute('fill', g.color);
   badge.querySelector('text').textContent = score === 4 ? '★' : score >= 2 ? '◆' : '?';
+
+  // ─── GTM / TikTok 전환 이벤트 (세션 당 1회만) ───────────────────────
+  if (!sessionStorage.getItem('quiz_converted')) {
+    sessionStorage.setItem('quiz_converted', '1');
+
+    // 1) GTM dataLayer push → GTM에서 SubmitForm 트리거로 수신
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'SubmitForm',
+      quiz_score: score,
+      quiz_grade: g.label
+    });
+
+    // 2) TikTok Pixel 직접 호출 (픽셀이 이미 삽입된 경우 중복 방지용 보조 호출)
+    if (typeof ttq !== 'undefined') {
+      ttq.track('SubmitForm', {
+        value: score,
+        currency: 'MYR',
+        contents: [{ content_name: 'Korean Manner Quiz', content_id: 'quiz_result' }]
+      });
+    }
+  }
+  // ──────────────────────────────────────────────────────────────────────
 }
 
 function restartQuiz() { startQuiz(); }
