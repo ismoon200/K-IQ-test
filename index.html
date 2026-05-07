@@ -759,11 +759,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 
   /* RESULT SCREEN */
-  .result-badge {
-    width: 80px;
-    height: 80px;
+  .result-card-img {
+    width: 100%;
+    max-width: 260px;
     margin: 0 auto 12px;
-    image-rendering: pixelated;
+    display: block;
+    border-radius: 16px;
+    border: 3px solid #bbb;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    object-fit: cover;
   }
 
   .result-score {
@@ -1817,12 +1821,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
               <!-- RESULT SCREEN -->
               <div class="result-screen" id="result-screen">
-                <svg class="result-badge" id="result-badge" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="10" y="10" width="60" height="60" fill="#E1FF46" rx="4"/>
-                  <rect x="14" y="14" width="52" height="52" fill="none" stroke="#1a1a2e" stroke-width="3"/>
-                  <text x="40" y="48" text-anchor="middle" font-family="'Press Start 2P'" font-size="22" fill="#1a1a2e">★</text>
-                </svg>
-                <div class="result-score" id="result-score">4/4</div>
+                <img class="result-card-img" id="result-card-img" src="5_5.png" alt="result card">
+                <div class="result-score" id="result-score">5/5</div>
                 <div class="result-grade" id="result-grade">BEST!</div>
                 <div class="result-msg" id="result-msg">You're a Korean manner pro!</div>
                 <div class="result-actions">
@@ -2425,9 +2425,9 @@ function showResult() {
   document.getElementById('result-grade').textContent = g.label;
   document.getElementById('result-msg').textContent = g.msg;
 
-  const badge = document.getElementById('result-badge');
-  badge.querySelector('rect:first-child').setAttribute('fill', g.color);
-  badge.querySelector('text').textContent = score === 4 ? '★' : score >= 2 ? '◆' : '?';
+  // 점수별 결과 카드 이미지 교체
+  const cardImgs = ['0_5.png', '1_5.png', '2_5.png', '3_5.png', '4_5.png', '5_5.png'];
+  document.getElementById('result-card-img').src = cardImgs[score];
 
     // ─── GTM / TikTok 전환 이벤트 (세션 당 1회만) ───────────────────────
   if (!sessionStorage.getItem('quiz_converted')) {
@@ -2465,8 +2465,18 @@ function getShareText() {
 const SECTION_SHARE_TEXT = '👽⭐Must Know Korean Manners before you land! play this Quiz and Check if You are ready for your trip to Korea!🇰🇷✈️';
 
 function openSectionShareModal() {
-  document.getElementById('section-share-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  const text = SECTION_SHARE_TEXT;
+  const url = SHARE_URL;
+  if (navigator.share) {
+    navigator.share({
+      title: 'Must-Know Korean Manner Quiz',
+      text: text,
+      url: url
+    }).catch(() => {});
+  } else {
+    document.getElementById('section-share-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
 }
 
 function closeSectionShareModal(e) {
