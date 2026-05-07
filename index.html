@@ -909,7 +909,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   /* START SCREEN CTA BUTTON (inside screen) */
   .screen-cta-btn {
     font-family: 'Silkscreen', monospace;
-    font-size: 13px;
+    font-size: 15px;
     background: #FE52A2;
     color: #fff;
     border: 3px solid var(--dark);
@@ -1498,9 +1498,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 
   .kmanners-card-body li {
-    font-family: 'Handjet', sans-serif;
+    font-family: 'Google Sans', 'Product Sans', 'DM Sans', sans-serif;
     font-size: 15px;
-    color: #222;
+    color: #000;
     line-height: 1.5;
   }
 
@@ -2636,7 +2636,21 @@ function closeKMannersModal(e) {
   }
 }
 
-function shareResult() { openShareModal(); }
+function shareResult() {
+  const text = getShareText();
+  const url = SHARE_URL;
+  // Web Share API 지원 시 네이티브 공유 시트 (iOS/Android 사진처럼)
+  if (navigator.share) {
+    navigator.share({
+      title: 'Must-Know Korean Manner Quiz',
+      text: text,
+      url: url
+    }).catch(() => {});
+  } else {
+    // 미지원 브라우저는 기존 SNS 모달로 fallback
+    openShareModal();
+  }
+}
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -2813,7 +2827,7 @@ function fixQuizPadding() {
   const header = document.querySelector('header');
   const section = document.getElementById('quiz');
   if (header && section) {
-    section.style.paddingTop = (header.offsetHeight + 20) + 'px';
+    section.style.paddingTop = (header.offsetHeight + 5) + 'px';
   }
 }
 window.addEventListener('load', fixQuizPadding);
