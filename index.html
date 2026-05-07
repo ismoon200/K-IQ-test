@@ -416,6 +416,12 @@
        1px  1px 0 #000,
        0    0  8px rgba(255,255,255,0.9),
        0    0 16px rgba(255,255,255,0.5);
+    animation: subBlink 2s ease-in-out infinite;
+  }
+
+  @keyframes subBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
   }
 
   /* 워킹 외계인 + 버튼 묶음 */
@@ -455,6 +461,7 @@
     flex-direction: column;
     width: 100%;
     background: #2a2a2a;
+    border-radius: 0;
     padding: 12px;
     flex: 1;
     overflow-y: auto;
@@ -466,6 +473,7 @@
     flex-direction: column;
     width: 100%;
     background: #2a2a2a;
+    border-radius: 0;
     padding: 16px 12px;
     text-align: center;
     flex: 1;
@@ -1290,7 +1298,7 @@
     box-shadow: 4px 4px 0 var(--dark);
   }
 
-  .result-btn-manners { background: #d0d0d0; color: #000; border-color: #aaa; }
+  .result-btn-manners { background: #EAFDDC; color: #000; border-color: #aaa; }
   .result-btn-primary   { background: #d0d0d0; color: #000; border-color: #aaa; }
   .result-btn-tertiary  { background: #C0FFFF; color: var(--dark); }
 
@@ -1567,7 +1575,7 @@
     .lang-toggle-track.ms-active .lang-toggle-thumb { left: calc(100% - 24px); }
 
     /* 섹션 상하 여백 30px로 축소 */
-    .gameboy-section  { padding-top: 120px; padding-bottom: 20px; }
+    .gameboy-section  { padding-top: calc(var(--mobile-header, 80px) + 20px); padding-bottom: 20px; }
     .about-section    { padding-top: 30px; padding-bottom: 30px; }
     .share-section    { padding-top: 30px; padding-bottom: 30px; }
 
@@ -2081,7 +2089,7 @@ const quizData = [
   },
   {
     icon: '🍔',
-    img: null,
+    img: 'Q2_Q.gif',
     en: {
       q: 'After finishing your fast food…',
       a: [
@@ -2103,7 +2111,7 @@ const quizData = [
   },
   {
     icon: '☕',
-    img: null,
+    img: 'Q3_Q.gif',
     en: {
       q: 'If you leave your bag at a cafe...',
       a: [
@@ -2125,7 +2133,7 @@ const quizData = [
   },
   {
     icon: '🚇',
-    img: null,
+    img: 'Q4_Q.gif',
     en: {
       q: 'Which seats can you sit in on the subway?',
       a: [
@@ -2147,7 +2155,7 @@ const quizData = [
   },
   {
     icon: '🍽️',
-    img: null,
+    img: 'Q5_Q.gif',
     en: {
       q: 'How do you find utensils at a restaurant?',
       a: [
@@ -2761,6 +2769,18 @@ window.addEventListener('load', () => {
   el.style.overflow = 'hidden';
 })();
 
+
+// MOBILE: 헤더 높이 측정 후 퀴즈 섹션 상단 여백 = 헤더 높이 + 20px
+function fixQuizPadding() {
+  if (window.innerWidth > 480) return;
+  const header = document.querySelector('header');
+  const section = document.getElementById('quiz');
+  if (header && section) {
+    section.style.paddingTop = (header.offsetHeight + 20) + 'px';
+  }
+}
+window.addEventListener('load', fixQuizPadding);
+window.addEventListener('resize', fixQuizPadding);
 
 // SMOOTH SCROLL
 function smoothScroll(id) {
