@@ -548,10 +548,67 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     position: relative;
   }
 
+  /* 이미지 로딩 스피너 */
+  .img-loading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .img-loading-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(255,255,255,0.15);
+    border-top: 3px solid var(--yellow);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .choice-card-img .img-loading-spinner {
+    width: 18px;
+    height: 18px;
+    border-width: 2px;
+    border-top-color: var(--pink);
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .img-loading-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    animation: loadBlink 1.2s ease-in-out infinite;
+  }
+
+  @keyframes loadBlink {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1; }
+  }
+
+  /* 이미지 로드 완료 시 페이드인 */
+  .q-img-slot img, .choice-card-img img {
+    animation: imgFadeIn 0.3s ease;
+  }
+
+  @keyframes imgFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* q-img-slot img 기존 스타일 유지 */
   .q-img-slot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
   }
 
@@ -661,6 +718,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
   }
 
   .choice-card-img .img-placeholder {
@@ -2404,12 +2462,17 @@ function renderQuestion() {
   qTextEl.textContent = d.q;
   qTextEl.setAttribute('data-qid', `q${currentQ+1}-${lang}`);
 
-  // 문제 이미지 슬롯
+  // 문제 이미지 슬롯 — 로딩 스피너 먼저 표시
   const qImgSlot = document.getElementById('q-img-slot');
   qImgSlot.setAttribute('data-qid', `q${currentQ+1}-img`);
   if (q.img) {
-    qImgSlot.innerHTML = `<img src="${q.img}" alt="question image">`;
+    qImgSlot.innerHTML = `<div class="img-loading"><div class="img-loading-spinner"></div><span class="img-loading-text">LOADING...</span></div>`;
     qImgSlot.style.display = 'flex';
+    const img = new Image();
+    img.src = q.img;
+    img.alt = 'question image';
+    img.onload = () => { qImgSlot.innerHTML = ''; qImgSlot.appendChild(img); };
+    img.onerror = () => { qImgSlot.innerHTML = `<span class="img-placeholder">IMAGE<br>SLOT</span>`; };
   } else {
     qImgSlot.innerHTML = `<span class="img-placeholder">IMAGE<br>SLOT</span>`;
     qImgSlot.style.display = 'flex';
@@ -2432,9 +2495,17 @@ function renderQuestion() {
     const imgWrap = document.createElement('div');
     imgWrap.className = 'choice-card-img';
     imgWrap.id = `choice-img-q${currentQ+1}-${i}`;
-    imgWrap.innerHTML = ans.img
-      ? `<img src="${ans.img}" alt="choice image">`
-      : `<span class="img-placeholder">IMG<br>SLOT</span>`;
+
+    if (ans.img) {
+      imgWrap.innerHTML = `<div class="img-loading"><div class="img-loading-spinner"></div></div>`;
+      const cImg = new Image();
+      cImg.src = ans.img;
+      cImg.alt = 'choice image';
+      cImg.onload = () => { imgWrap.innerHTML = ''; imgWrap.appendChild(cImg); };
+      cImg.onerror = () => { imgWrap.innerHTML = `<span class="img-placeholder">IMG<br>SLOT</span>`; };
+    } else {
+      imgWrap.innerHTML = `<span class="img-placeholder">IMG<br>SLOT</span>`;
+    }
 
     const label = document.createElement('div');
     label.className = 'choice-card-label';
