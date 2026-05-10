@@ -1426,6 +1426,54 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     padding: 0 8px;
   }
 
+  .reward-modal-share {
+    font-family: 'Silkscreen', monospace;
+    font-size: 11px;
+    background: #FE52A2;
+    color: #fff;
+    border: 3px solid var(--dark);
+    border-radius: 8px;
+    box-shadow: 3px 3px 0 var(--dark);
+    padding: 12px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    animation: rewardBtnFloat 2s ease-in-out infinite;
+  }
+
+  @keyframes rewardBtnFloat {
+    0%, 100% { transform: translateY(0);   box-shadow: 3px 3px 0 var(--dark); }
+    50%       { transform: translateY(-5px); box-shadow: 3px 8px 0 var(--dark); }
+  }
+
+  .reward-modal-share::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 30%; height: 200%;
+    background: rgba(255,255,255,0.45);
+    transform: skewX(-20deg);
+    animation: rewardBtnShine 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes rewardBtnShine {
+    0%   { left: -60%; opacity: 0; }
+    10%  { opacity: 1; }
+    40%  { left: 130%; opacity: 1; }
+    41%  { opacity: 0; }
+    100% { left: 130%; opacity: 0; }
+  }
+
+  .reward-modal-share:hover {
+    background: #ff6db3;
+    animation-play-state: paused;
+    transform: translateY(-5px);
+    box-shadow: 3px 8px 0 var(--dark);
+  }
+
   .reward-modal-close {
     font-family: 'Silkscreen', monospace;
     font-size: 10px;
@@ -2094,6 +2142,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="reward-modal-title">🎖️ DOWNLOAD YOUR GAME CD<br>AND SHARE!</div>
     <img class="reward-modal-img" id="reward-modal-img" src="5_5.png" alt="reward card">
     <div class="reward-modal-msg" id="reward-modal-msg"></div>
+    <button class="reward-modal-share" onclick="shareResult()">↗ SHARE RESULT</button>
     <button class="reward-modal-close" onclick="closeRewardModal()">✕ CLOSE</button>
   </div>
 </div>
